@@ -2650,7 +2650,7 @@
         // ============================================================
         
         function generateStyledHtmlOfferIPhone(commercialCode) {
-            // Usa la función normal pero SIN el banner
+            // VERSIÓN COMPLETA pero SIN banner para iPhone
             const bd = lastComparisonResult;
             const offer = bd.offer;
             const brand = activeBrand;
@@ -2687,14 +2687,35 @@
             const totalConsumption = num(bd.energyCosts.reduce((sum, e) => sum + e.kwh, 0), 0) + ' kWh';
             
             const commercialTariffName = bd.isNegativeSavings ? "Tu Tarifa Actual" : (offer.isDrk ? `${offer.name} - ${offer.description}` : offer.name);
+            const commercializadoraName = offer.isDrk ? offer.name?.toUpperCase() : (offer.name?.toUpperCase() === 'TU TARIFA ACTUAL' ? 'TU COMERCIALIZADORA' : offer.name?.toUpperCase());
             
-            const tableMain = `width: 600px; max-width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #ddd; margin: 0 auto; background: white;`;
-            const headerCell = `background-color: ${D_PRIMARY_DARK}; color: white; padding: 15px; text-align: center;`;
-            const rowLabel = `padding: 8px; border-bottom: 1px solid #eee; font-size: 13px; color: #555; vertical-align: top;`;
-            const rowValue = `padding: 8px; border-bottom: 1px solid #eee; font-size: 13px; font-weight: bold; color: #333; text-align: right; white-space: nowrap; vertical-align: top;`;
+            const tableMain = `width:600px;max-width:100%;border-collapse:collapse;font-family:Arial,sans-serif;border:1px solid #ddd;margin:0 auto;background:white;`;
+            const headerCell = `background-color:${D_PRIMARY_DARK};color:white;padding:15px;text-align:center;`;
+            const rowLabel = `padding:8px;border-bottom:1px solid #eee;font-size:13px;color:#555;`;
+            const rowValue = `padding:8px;border-bottom:1px solid #eee;font-size:13px;font-weight:bold;color:#333;text-align:right;`;
+            
+            const currentTariffConfig = TARIFF_CONFIG[bd.tariffType];
+            
+            let desglosePotencia = bd.powerCosts.map(p => {
+                if (p.period <= currentTariffConfig.powerPeriods) {
+                    return `<tr><td style="${rowLabel}">P${p.period} (${num(p.kw,2)} kW x ${bd.dias_facturados}d x ${numPriceFormula(p.priceDay)})</td><td style="${rowValue}">${num(p.cost,2)} €</td></tr>`;
+                }
+                return '';
+            }).join('');
+            
+            let desgloseEnergia = bd.energyCosts.map(e => {
+                if (e.period <= currentTariffConfig.periods) {
+                    return `<tr><td style="${rowLabel}">E${e.period} (${num(e.kwh,0)} kWh x ${numPriceFormula(e.price)})</td><td style="${rowValue}">${num(e.cost,2)} €</td></tr>`;
+                }
+                return '';
+            }).join('');
+            
+            const discountRowsHtml = bd.discountAmount > 0 ? `<tr><td style="${rowLabel};font-weight:bold;color:#CC0000;">DESCUENTO COMERCIAL (${num(bd.discountRate*100,0)}%)</td><td style="${rowValue};font-weight:bold;color:#CC0000;">-${num(bd.discountAmount,2)} €</td></tr>` : '';
+            
+            const discountSummaryRow = bd.discountRate > 0 ? `<tr><td style="padding:5px 8px;font-weight:bold;color:#CC0000;">DESCUENTO ENERGÍA</td><td style="padding:5px 8px;text-align:right;font-weight:bold;color:#CC0000;">${num(bd.discountRate*100,0)}%</td></tr>` : '';
 
-            // IMPORTANTE: SIN BANNER - directo a la tabla principal
-            return `<table cellpadding="0" cellspacing="0" style="${tableMain}"><tr><td colspan="2" style="${headerCell}"><h1 style="margin:0;font-size:24px;">ESTUDIO DE AHORRO</h1><p style="margin:5px 0 0 0;font-size:14px;">COMPARATIVA PROFESIONAL - ${D_BRAND_NAME.toUpperCase()}</p></td></tr><tr><td colspan="2" style="padding:15px;"><p style="margin:0;font-size:13px;"><strong>CLIENTE:</strong> ${clientName}</p><p style="margin:5px 0 0 0;font-size:13px;"><strong>CUPS:</strong> ${bd.cups}</p><p style="margin:5px 0 0 0;font-size:13px;"><strong>COMERCIAL:</strong> ${commercialCode}</p></td></tr><tr><td colspan="2" style="background-color:${BG_LIGHT};padding:15px;text-align:center;border-top:2px solid ${D_PRIMARY_MED};border-bottom:2px solid ${D_PRIMARY_MED};"><p style="margin:0;color:${D_PRIMARY_MED};font-size:12px;font-weight:bold;">LA MEJOR OPCIÓN PARA TI ES</p><h2 style="margin:5px 0 0 0;color:${D_PRIMARY_DARK};font-size:22px;">${commercialTariffName}</h2></td></tr><tr><td colspan="2" style="padding:20px;text-align:center;"><p style="margin:0;font-size:16px;font-weight:bold;color:${D_PRIMARY_DARK};">AHORRO ANUAL:</p><span style="font-size:32px;font-weight:bold;color:${GREEN_SAVE};display:block;margin-top:5px;">${eur(bd.savings)}</span></td></tr></table>`;
+            // SIN BANNER - Tabla completa en una línea
+            return `<table cellpadding="0" cellspacing="0" style="${tableMain}"><tr><td colspan="2" style="${headerCell}"><h1 style="margin:0;font-size:24px;">ESTUDIO DE AHORRO</h1><p style="margin:5px 0 0 0;font-size:14px;">COMPARATIVA PROFESIONAL - ${D_BRAND_NAME.toUpperCase()}</p></td></tr><tr><td colspan="2" style="padding:15px;"><p style="margin:0;font-size:13px;"><strong>CLIENTE:</strong> ${clientName}</p><p style="margin:5px 0 0 0;font-size:13px;"><strong>CUPS:</strong> ${bd.cups}</p><p style="margin:5px 0 0 0;font-size:13px;"><strong>COMERCIAL:</strong> ${commercialCode}</p></td></tr><tr><td colspan="2" style="background-color:${BG_LIGHT};padding:15px;text-align:center;border-top:2px solid ${D_PRIMARY_MED};border-bottom:2px solid ${D_PRIMARY_MED};"><p style="margin:0;color:${D_PRIMARY_MED};font-size:12px;font-weight:bold;">LA MEJOR OPCIÓN PARA TI ES</p><h2 style="margin:5px 0 0 0;color:${D_PRIMARY_DARK};font-size:22px;">${commercialTariffName}</h2></td></tr><tr><td colspan="2" style="padding:20px;text-align:center;"><p style="margin:0;font-size:16px;font-weight:bold;color:${D_PRIMARY_DARK};">AHORRO ANUAL:</p><span style="font-size:32px;font-weight:bold;color:${GREEN_SAVE};display:block;margin-top:5px;">${eur(bd.savings)}</span></td></tr><tr><td colspan="2" style="padding:0 20px;"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;"><tr><td style="width:50%;padding:10px;border-right:1px solid #eee;text-align:center;"><p style="margin:0;font-size:12px;color:#888;font-weight:bold;">TU FACTURA ACTUAL</p><p style="margin:5px 0;font-size:20px;font-weight:bold;color:${RED_CTA};">${eur(bd.importe_total)}</p><p style="margin:0;font-size:11px;color:#888;">Total Periodo (${bd.dias_facturados} días)</p><p style="margin:10px 0 0 0;font-size:16px;font-weight:bold;color:${RED_CTA};">${eur(bd.originalBillAnnual)}/año</p></td><td style="width:50%;padding:10px;text-align:center;"><p style="margin:0;font-size:12px;color:#888;font-weight:bold;">TU NUEVO COSTE ${D_BRAND_NAME}</p><p style="margin:5px 0;font-size:24px;font-weight:bold;color:${D_PRIMARY_DARK};">${monthlyEstimate}/mes</p><p style="margin:0;font-size:11px;color:#888;">Estimado Mensual</p><p style="margin:10px 0 0 0;font-size:18px;font-weight:bold;color:${D_PRIMARY_DARK};">${eur(bd.totalAnnual)}/año</p></td></tr></table></td></tr><tr><td colspan="2" style="padding:20px 20px 0 20px;"><div style="${sectionTitle}">DESGLOSE DETALLADO DE LA SIMULACIÓN</div></td></tr><tr><td colspan="2" style="padding:0 20px;"><table width="100%" cellpadding="0" cellspacing="0">${desglosePotencia}<tr><td style="${rowLabel};background-color:#eee;font-weight:bold;">SUBTOTAL POTENCIA</td><td style="${rowValue};background-color:#eee;font-weight:bold;">${num(bd.subPower,2)} €</td></tr>${desgloseEnergia}${discountRowsHtml}<tr><td style="${rowLabel};background-color:#eee;font-weight:bold;">SUBTOTAL ENERGÍA</td><td style="${rowValue};background-color:#eee;font-weight:bold;">${num(bd.subEnergyNet,2)} €</td></tr><tr><td style="${rowLabel};font-weight:bold;">IMP. ELÉCTRICO</td><td style="${rowValue}">${num(bd.impuestoElectrico,2)} €</td></tr><tr><td style="${rowLabel};font-weight:bold;">IVA (21%)</td><td style="${rowValue}">${num(bd.iva,2)} €</td></tr><tr><td style="${rowLabel};font-weight:bold;">TOTAL FACTURA (${bd.dias_facturados} DÍAS)</td><td style="${rowValue};font-size:16px;">${eur(bd.totalPeriod)}</td></tr></table></td></tr><tr><td colspan="2" style="padding:20px 20px 0 20px;"><div style="${sectionTitle}">RESUMEN DE PRECIOS DE LA OFERTA ÚNICA</div></td></tr><tr><td colspan="2" style="padding:0 20px 20px 20px;"><table width="100%" cellpadding="0" cellspacing="0" style="font-size:12px;"><tr style="background-color:#f5f5f5;"><th style="padding:5px 8px;text-align:left;color:${D_PRIMARY_DARK};">CONCEPTO</th><th style="padding:5px 8px;text-align:right;color:${D_PRIMARY_DARK};">PRECIO ${commercializadoraName}</th></tr><tr><td style="padding:5px 8px;">Potencia P1 (€/kW/día)</td><td style="padding:5px 8px;text-align:right;font-weight:bold;">${numPriceFormula(p1PricePerDay)}</td></tr><tr><td style="padding:5px 8px;">Potencia P2 (€/kW/día)</td><td style="padding:5px 8px;text-align:right;font-weight:bold;">${numPriceFormula(p2PricePerDay)}</td></tr><tr><td style="padding:5px 8px;">Energía E1 (€/kWh)</td><td style="padding:5px 8px;text-align:right;font-weight:bold;">${numPriceFormula(e1Price)}</td></tr><tr><td style="padding:5px 8px;">Energía E2 (€/kWh)</td><td style="padding:5px 8px;text-align:right;font-weight:bold;">${numPriceFormula(e2Price)}</td></tr><tr><td style="padding:5px 8px;">Energía E3 (€/kWh)</td><td style="padding:5px 8px;text-align:right;font-weight:bold;">${numPriceFormula(e3Price)}</td></tr>${discountSummaryRow}<tr style="background-color:#eee;font-weight:bold;"><td style="padding:8px;color:${D_PRIMARY_DARK};">AHORRO ANUAL</td><td style="padding:8px;text-align:right;font-size:14px;color:${GREEN_SAVE};">${eur(bd.savings)}</td></tr></table></td></tr></table>`;
         }
         
         function generateMultiStyledHtmlOfferIPhone(commercialCode) {
