@@ -2323,38 +2323,58 @@
             const commercialTariffName = bd.isNegativeSavings ? "Tu Tarifa Actual" : (offer.isDrk ? `${offer.name} - ${offer.description}` : offer.name);
             const commercializadoraName = offer.isDrk ? offer.name?.toUpperCase() : (offer.name?.toUpperCase() === 'TU TARIFA ACTUAL' ? 'TU COMERCIALIZADORA' : offer.name?.toUpperCase());
 
-            const emailBody = `Hola ${D_BRAND_NAME.toUpperCase()}, confirmo la aceptación de la oferta con CUPS: ${bd.cups}.${LB}${LB}` +
-                                 `--- DATOS DE LA OFERTA ---${LB}${LB}` +
-                                 `Comercializadora y Tarifa: ${commercialTariffName}${LB}` +  
-                                 `Zona Geográfica: ${ZONA_GEOGRAFICA}${LB}` + // ADDED
-                                 `Ahorro Anual Estimado: ${eur(bd.savings)}${LB}` +
-                                 `Total Mensual Estimado: ${monthlyEstimate}${LB}` +
-                                 `Consumo Total Facturado: ${totalConsumption}${LB}${LB}` +
-                                 `--- DETALLE DE PRECIOS (€) ---${LB}` +
-                                 `P1 (Potencia - €/kW/día): ${numPriceFormula(p1PricePerDay)}${LB}` +
-                                 `P2 (Potencia - €/kW/día): ${numPriceFormula(p2PricePerDay)}${LB}` +
-                                 `E1 (Energía - €/kWh): ${numPriceFormula(e1Price)}${LB}` +
-                                 `E2 (Energía - €/kWh): ${numPriceFormula(e2Price)}${LB}` +
-                                 `E3 (Energía - €/kWh): ${numPriceFormula(e3Price)}${LB}` +
-                                 `------------------------------${LB}${LB}` +  
-                                 `${discountLine}` +  
-                                 `--- DATOS DEL CLIENTE ---${LB}` + // MATCHED USER EXAMPLE
-                                 `Nombre completo: ${clientName}${LB}` +
-                                 `Teléfono de contacto: ${clientPhone}${LB}` +
-                                 `Email de contacto: ${clientEmail}${LB}${LB}` +
-                                 `--- INFORMACIÓN ADICIONAL (Opcional) ---${LB}` + // MATCHED USER EXAMPLE
-                                 `[AGREGUE CUALQUIER COMENTARIO EXTRA AQUÍ]${LB}${LB}` +
-                                 `--- DOCUMENTACIÓN REQUERIDA ---${LB}${LB}` + // ADDED
-                                 `Para formalizar el contrato, por favor, responde a este email adjuntando:${LB}${LB}` +
-                                 `1. Foto del DNI/CIF (anverso y reverso).${LB}` +
-                                 `2. Última factura (mínimo 3 meses de antigüedad).${LB}` +
-                                 `3. Email de contacto para validación.${LB}` +
-                                 `4. Teléfono de contacto.${LB}` +
-                                 `5. Número de cuenta bancaria (IBAN).${LB}${LB}` +
-                                 `Adjunto la documentación requerida.`; // ADDED FINAL SIGN-OFF
+            const emailBody = `✅ CONFIRMACIÓN DE ACEPTACIÓN DE OFERTA${LB}${LB}` +
+                                 `Estimado equipo de ${D_BRAND_NAME.toUpperCase()},${LB}${LB}` +
+                                 `Confirmo mi aceptación de la oferta energética que detallo a continuación:${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `📋 DATOS DEL SUMINISTRO${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `🔌 CUPS:${LB}${bd.cups}${LB}${LB}` +
+                                 `⚡ TARIFA CONTRATADA:${LB}${commercialTariffName}${LB}${LB}` +
+                                 `🌍 Zona Geográfica: ${ZONA_GEOGRAFICA}${LB}` +
+                                 `📊 Consumo Facturado: ${totalConsumption}${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `💰 BENEFICIO ECONÓMICO${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `💵 Ahorro Anual Estimado: ${eur(bd.savings)}${LB}` +
+                                 `📅 Coste Mensual Estimado: ${monthlyEstimate}${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `💡 PRECIOS CONTRATADOS${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `🔴 POTENCIA:${LB}` +
+                                 `   • P1: ${numPriceFormula(p1PricePerDay)} €/kW/día${LB}` +
+                                 `   • P2: ${numPriceFormula(p2PricePerDay)} €/kW/día${LB}${LB}` +
+                                 `🟢 ENERGÍA:${LB}` +
+                                 `   • E1 (Punta): ${numPriceFormula(e1Price)} €/kWh${LB}` +
+                                 `   • E2 (Llano): ${numPriceFormula(e2Price)} €/kWh${LB}` +
+                                 `   • E3 (Valle): ${numPriceFormula(e3Price)} €/kWh${LB}${LB}` +
+                                 `${discountLine}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `👤 DATOS DEL TITULAR${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `📛 Nombre completo: ${clientName}${LB}` +
+                                 `📱 Teléfono: ${clientPhone}${LB}` +
+                                 `📧 Email: ${clientEmail}${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `📎 DOCUMENTACIÓN ADJUNTA${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `Adjunto la siguiente documentación para formalizar el contrato:${LB}${LB}` +
+                                 `✓ 1. Foto DNI/CIF (anverso y reverso)${LB}` +
+                                 `✓ 2. Última factura de luz (mín. 3 meses)${LB}` +
+                                 `✓ 3. Email de contacto${LB}` +
+                                 `✓ 4. Teléfono de contacto${LB}` +
+                                 `✓ 5. Número de cuenta bancaria (IBAN)${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `💬 COMENTARIOS ADICIONALES${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `[Escriba aquí cualquier observación o consulta adicional]${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `Quedo a la espera de la confirmación de la formalización del contrato.${LB}${LB}` +
+                                 `Atentamente,${LB}` +
+                                 `${clientName}`;
 
-            const subject = `FORMALIZACIÓN DE CONTRATO - CUPS: ${bd.cups}`;
-            const formalizationRecipients = 'f.araujo@drk.es,r.guerra@drk.es,s.caballero@drk.es'; // Email por defecto
+            const subject = `✅ FORMALIZACIÓN CONTRATO - CUPS: ${bd.cups}`;
+            const formalizationRecipients = 'f.araujo@drk.es,r.guerra@drk.es,s.caballero@drk.es';
             const formalizationLink = `mailto:${formalizationRecipients}?subject=${encodeURIComponent(subject)}&body=${emailBody}`;
 
             const tableMain = `width: 600px; max-width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #ddd; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden;`;
@@ -2731,30 +2751,46 @@
             // MODIFICACIÓN: Nombre completo de la oferta consolidada
             const consolidatedTariffName = `${offer.name} - ${offer.description}`;
 
-            const emailBody = `Hola ${D_BRAND_NAME.toUpperCase()}, confirmo la aceptación de la oferta consolidada para ${individualResults.length} suministros (MULTICUPS).${LB}${LB}` +
-                                 `--- RESUMEN CONSOLIDADO ---${LB}` +
-                                 `Oferta Consolidada: ${consolidatedTariffName}${LB}` + // MODIFICADO
-                                 `Zona Geográfica: ${ZONA_GEOGRAFICA}${LB}` + // ADDED
-                                 `Ahorro Anual Estimado: ${eur(bd.savings)}${LB}` +
-                                 `Total Mensual Estimado: ${eur(bd.totalAnnual / 12)}${LB}` +
-                                 `Total Suministros: ${individualResults.length}${LB}${LB}` +
-                                 `DETALLE DE CUPS: ${bd.multiCupsList}${LB}${LB}` +
-                                 `--- DATOS DEL CLIENTE ---${LB}` + // MATCHED USER EXAMPLE
-                                 `Nombre completo: ${clientName}${LB}` +
-                                 `Teléfono de contacto: ${clientPhone}${LB}` +
-                                 `Email de contacto: ${clientEmail}${LB}${LB}` +
-                                 `--- INFORMACIÓN ADICIONAL (Opcional) ---${LB}` + // MATCHED USER EXAMPLE
-                                 `[AGREGUE CUALQUIER COMENTARIO EXTRA AQUÍ]${LB}${LB}` +
-                                 `--- DOCUMENTACIÓN REQUERIDA ---${LB}${LB}` + // ADDED
-                                 `Para formalizar el contrato, por favor, responde a este email adjuntando:${LB}${LB}` +
-                                 `1. Foto del DNI/CIF (anverso y reverso).${LB}` +
-                                 `2. Última factura (mínimo 3 meses de antigüedad).${LB}` +
-                                 `3. Email de contacto para validación.${LB}` +
-                                 `4. Teléfono de contacto.${LB}` +
-                                 `5. Número de cuenta bancaria (IBAN).${LB}${LB}` +
-                                 `Adjunto la documentación requerida.`; // ADDED FINAL SIGN-OFF
+            const emailBody = `✅ CONFIRMACIÓN OFERTA CONSOLIDADA - MULTICUPS${LB}${LB}` +
+                                 `Estimado equipo de ${D_BRAND_NAME.toUpperCase()},${LB}${LB}` +
+                                 `Confirmo mi aceptación de la oferta energética consolidada para múltiples suministros:${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `📊 RESUMEN CONSOLIDADO${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `⚡ OFERTA:${LB}${consolidatedTariffName}${LB}${LB}` +
+                                 `🌍 Zona Geográfica: ${ZONA_GEOGRAFICA}${LB}` +
+                                 `🔌 Total Suministros: ${individualResults.length} CUPS${LB}${LB}` +
+                                 `📋 CUPS INCLUIDOS:${LB}${bd.multiCupsList}${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `💰 BENEFICIO ECONÓMICO TOTAL${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `💵 Ahorro Anual Consolidado: ${eur(bd.savings)}${LB}` +
+                                 `📅 Coste Mensual Total: ${eur(bd.totalAnnual / 12)}${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `👤 DATOS DEL TITULAR${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `📛 Nombre completo: ${clientName}${LB}` +
+                                 `📱 Teléfono: ${clientPhone}${LB}` +
+                                 `📧 Email: ${clientEmail}${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `📎 DOCUMENTACIÓN POR CUPS${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `Adjunto la siguiente documentación para cada CUPS:${LB}${LB}` +
+                                 `✓ 1. Foto DNI/CIF (anverso y reverso)${LB}` +
+                                 `✓ 2. Última factura de cada suministro (mín. 3 meses)${LB}` +
+                                 `✓ 3. Email de contacto${LB}` +
+                                 `✓ 4. Teléfono de contacto${LB}` +
+                                 `✓ 5. Número de cuenta bancaria (IBAN)${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}` +
+                                 `💬 COMENTARIOS ADICIONALES${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `[Escriba aquí cualquier observación o consulta adicional]${LB}${LB}` +
+                                 `════════════════════════════════════════${LB}${LB}` +
+                                 `Quedo a la espera de la confirmación de la formalización del contrato consolidado.${LB}${LB}` +
+                                 `Atentamente,${LB}` +
+                                 `${clientName}`;
 
-            const subject = `FORMALIZACIÓN CONSOLIDADA - ${individualResults.length} CUPS`;
+            const subject = `✅ FORMALIZACIÓN CONSOLIDADA - ${individualResults.length} CUPS`;
             const formalizationRecipients = 'f.araujo@drk.es,r.guerra@drk.es,s.caballero@drk.es';  
             const formalizationLink = `mailto:${formalizationRecipients}?subject=${encodeURIComponent(subject)}&body=${emailBody}`;
 
