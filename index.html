@@ -543,7 +543,20 @@
                 <input type="tel" id="client-phone-input" placeholder="Teléfono" class="w-full mb-3 p-3 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-drk-500 outline-none">
                 <input type="email" id="client-email-input" placeholder="Email" class="w-full mb-4 p-3 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-drk-500 outline-none">
                 
-                <button id="execute-send-offer-btn" class="w-full bg-cta-red-500 hover:bg-cta-red-600 text-white font-black py-3 rounded-xl shadow-md mb-3">COPIAR COMPARATIVO (HTML)</button>
+                <div class="bg-slate-50 p-3 rounded-lg mb-3 text-xs text-slate-600">
+                    <p class="font-bold mb-1">📧 Elige el botón según tu caso:</p>
+                    <p>• <strong>Todos los correos:</strong> Gmail, Outlook, etc. (PC y móvil)</p>
+                    <p>• <strong>iPhone Apple Mail:</strong> Solo si envías desde Apple Mail en iPhone</p>
+                </div>
+                
+                <button id="execute-send-offer-btn" class="w-full bg-cta-red-500 hover:bg-cta-red-600 text-white font-black py-3 rounded-xl shadow-md mb-2">
+                    📧 COPIAR COMPARATIVO (Todos los correos)
+                </button>
+                
+                <button id="execute-send-offer-iphone-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl shadow-md mb-3">
+                    📱 COPIAR COMPARATIVO (iPhone Apple Mail)
+                </button>
+                
                 <button onclick="document.getElementById('send-offer-modal').classList.add('hidden'); document.getElementById('send-offer-modal').classList.remove('flex');" class="w-full bg-slate-200 font-bold py-3 rounded-xl text-sm">Cancelar</button>
             </div>
         </div>
@@ -2257,6 +2270,53 @@
             }
         }
         
+        // NUEVA FUNCIÓN: Versión optimizada para iPhone + Apple Mail
+        async function handleCopyOfferIPhone() {
+            if (!lastComparisonResult) return window.showErrorModal("Primero realice una comparación.");
+            
+            const commercialCode = document.getElementById('comercial-code-input').value.trim();
+            if (!commercialCode) return window.showErrorModal("Indique el Código Comercial.");
+
+            try {
+                // 1. Generar el HTML usando las funciones especiales para iPhone
+                let htmlContent = '';
+                if (lastComparisonResult.isMulti) {
+                    htmlContent = generateMultiStyledHtmlOfferIPhone(commercialCode);
+                } else {
+                    htmlContent = generateStyledHtmlOfferIPhone(commercialCode);
+                }
+                
+                // 2. Crear un elemento temporal para la copia HTML enriquecida
+                const tempElement = document.createElement('div');
+                tempElement.contentEditable = true;
+                tempElement.innerHTML = htmlContent;
+                tempElement.style.position = 'fixed';
+                tempElement.style.left = '-9999px';
+                document.body.appendChild(tempElement);
+                
+                // Seleccionar y copiar
+                const range = document.createRange();
+                range.selectNodeContents(tempElement);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+                
+                let success = document.execCommand('copy');
+                document.body.removeChild(tempElement);
+
+                if (success) {
+                    window.showMessageModal("📱 ¡Oferta copiada (iPhone)! Pégala en Apple Mail de tu iPhone.");
+                    document.getElementById('send-offer-modal').classList.add('hidden');
+                    document.getElementById('send-offer-modal').classList.remove('flex');
+                } else {
+                    window.showErrorModal("No se pudo copiar. Intenta con el otro botón o desde un PC.");
+                }
+            } catch (e) {
+                console.error("Error al copiar al portapapeles:", e);
+                window.showErrorModal(`Error de Portapapeles: ${e.message}`);
+            }
+        }
+        
         function generateStyledHtmlOffer(commercialCode) {
             const bd = lastComparisonResult;
             const offer = bd.offer;
@@ -2581,6 +2641,86 @@
 
                     <tr><td colspan="2" style="padding: 0; height: 10px;"><div style="${footerStyle}"></div></td></tr>
                 </table>`;
+        }
+
+
+        // ============================================================
+        // FUNCIONES ESPECIALES PARA iPhone + APPLE MAIL
+        // Versión ultra-simplificada SIN banner para evitar problemas
+        // ============================================================
+        
+        function generateStyledHtmlOfferIPhone(commercialCode) {
+            // Usa la función normal pero SIN el banner
+            const bd = lastComparisonResult;
+            const offer = bd.offer;
+            const brand = activeBrand;
+            
+            const eur = (n) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n || 0);
+            const num = (n, d=2) => new Intl.NumberFormat('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n || 0);
+            const numPriceFormula = (n) => new Intl.NumberFormat('es-ES', { minimumFractionDigits: 6, maximumFractionDigits: 6 }).format(n || 0);
+            
+            const DRK_DARK = '#0c4a6e'; const DRK_MED = '#075985'; const DRK_CTA = '#0284c7';
+            const PC_DARK = '#3f6212'; const PC_MED = '#65a30d'; const PC_CTA = '#84cc16';
+
+            const D_PRIMARY_DARK = brand.NAME.includes('DRK') ? DRK_DARK : PC_DARK;
+            const D_PRIMARY_MED = brand.NAME.includes('DRK') ? DRK_MED : PC_MED;
+            const D_ACCENT_CTA = brand.NAME.includes('DRK') ? DRK_CTA : PC_CTA;
+            const D_BRAND_NAME = brand.NAME;
+            const ZONA_GEOGRAFICA = "PENINSULA";
+
+            const RED_CTA = '#CC0000';
+            const BG_LIGHT = brand.NAME.includes('DRK') ? '#f0f9ff' : '#f7fee7';  
+            const GREEN_SAVE = '#16a34a';
+            const sectionTitle = `background-color: ${D_PRIMARY_MED}; color: white; font-weight: bold; padding: 8px; font-size: 14px;`;
+
+            const clientName = document.getElementById('client-name-input').value.trim() || '[NOMBRE COMPLETO CLIENTE]';
+            const clientPhone = document.getElementById('client-phone-input').value.trim() || '[TELÉFONO CLIENTE]';
+            const clientEmail = document.getElementById('client-email-input').value.trim() || '[EMAIL CLIENTE]';
+            
+            const p1PricePerDay = bd.powerCosts.find(p => p.period === 1)?.priceDay || 0;
+            const p2PricePerDay = bd.powerCosts.find(p => p.period === 2)?.priceDay || 0;
+            const e1Price = bd.energyCosts.find(e => e.period === 1)?.price || 0;
+            const e2Price = bd.energyCosts.find(e => e.period === 2)?.price || 0;
+            const e3Price = bd.energyCosts.find(e => e.period === 3)?.price || 0;
+
+            const monthlyEstimate = eur(bd.totalAnnual / 12);
+            const totalConsumption = num(bd.energyCosts.reduce((sum, e) => sum + e.kwh, 0), 0) + ' kWh';
+            
+            const commercialTariffName = bd.isNegativeSavings ? "Tu Tarifa Actual" : (offer.isDrk ? `${offer.name} - ${offer.description}` : offer.name);
+            
+            const tableMain = `width: 600px; max-width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #ddd; margin: 0 auto; background: white;`;
+            const headerCell = `background-color: ${D_PRIMARY_DARK}; color: white; padding: 15px; text-align: center;`;
+            const rowLabel = `padding: 8px; border-bottom: 1px solid #eee; font-size: 13px; color: #555; vertical-align: top;`;
+            const rowValue = `padding: 8px; border-bottom: 1px solid #eee; font-size: 13px; font-weight: bold; color: #333; text-align: right; white-space: nowrap; vertical-align: top;`;
+
+            // IMPORTANTE: SIN BANNER - directo a la tabla principal
+            return `<table cellpadding="0" cellspacing="0" style="${tableMain}"><tr><td colspan="2" style="${headerCell}"><h1 style="margin:0;font-size:24px;">ESTUDIO DE AHORRO</h1><p style="margin:5px 0 0 0;font-size:14px;">COMPARATIVA PROFESIONAL - ${D_BRAND_NAME.toUpperCase()}</p></td></tr><tr><td colspan="2" style="padding:15px;"><p style="margin:0;font-size:13px;"><strong>CLIENTE:</strong> ${clientName}</p><p style="margin:5px 0 0 0;font-size:13px;"><strong>CUPS:</strong> ${bd.cups}</p><p style="margin:5px 0 0 0;font-size:13px;"><strong>COMERCIAL:</strong> ${commercialCode}</p></td></tr><tr><td colspan="2" style="background-color:${BG_LIGHT};padding:15px;text-align:center;border-top:2px solid ${D_PRIMARY_MED};border-bottom:2px solid ${D_PRIMARY_MED};"><p style="margin:0;color:${D_PRIMARY_MED};font-size:12px;font-weight:bold;">LA MEJOR OPCIÓN PARA TI ES</p><h2 style="margin:5px 0 0 0;color:${D_PRIMARY_DARK};font-size:22px;">${commercialTariffName}</h2></td></tr><tr><td colspan="2" style="padding:20px;text-align:center;"><p style="margin:0;font-size:16px;font-weight:bold;color:${D_PRIMARY_DARK};">AHORRO ANUAL:</p><span style="font-size:32px;font-weight:bold;color:${GREEN_SAVE};display:block;margin-top:5px;">${eur(bd.savings)}</span></td></tr></table>`;
+        }
+        
+        function generateMultiStyledHtmlOfferIPhone(commercialCode) {
+            // Versión simplificada para MultiCups sin banner
+            const bd = lastComparisonResult;
+            const offer = bd.offer;
+            const individualResults = bd.individualResults;
+            const dynamicBrand = activeBrand;
+            
+            const eur = (n) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n || 0);
+            
+            const DRK_DARK = '#0c4a6e'; const DRK_MED = '#075985';
+            const PC_DARK = '#3f6212'; const PC_MED = '#65a30d';
+            
+            const D_PRIMARY_DARK = dynamicBrand.NAME.includes('DRK') ? DRK_DARK : PC_DARK;
+            const D_PRIMARY_MED = dynamicBrand.NAME.includes('DRK') ? DRK_MED : PC_MED;
+            const D_BRAND_NAME = dynamicBrand.NAME;
+            const GREEN_SAVE = '#16a34a';
+            
+            const clientName = document.getElementById('client-name-input').value.trim() || '[NOMBRE COMPLETO CLIENTE]';
+            
+            const tableMain = `width:600px;max-width:100%;border-collapse:collapse;font-family:Arial,sans-serif;border:1px solid #ddd;margin:0 auto;background:white;`;
+            const headerCell = `background-color:${D_PRIMARY_DARK};color:white;padding:15px;text-align:center;`;
+            
+            // IMPORTANTE: SIN BANNER - directo a la tabla principal
+            return `<table cellpadding="0" cellspacing="0" style="${tableMain}"><tr><td colspan="2" style="${headerCell}"><h1 style="margin:0;font-size:24px;">ESTUDIO CONSOLIDADO DE AHORRO</h1><p style="margin:5px 0 0 0;font-size:14px;">ANÁLISIS DE ${individualResults.length} SUMINISTROS</p></td></tr><tr><td colspan="2" style="padding:15px;"><p style="margin:0;font-size:13px;"><strong>CLIENTE:</strong> ${clientName}</p><p style="margin:5px 0 0 0;font-size:13px;"><strong>TOTAL CUPS:</strong> ${individualResults.length}</p></td></tr><tr><td colspan="2" style="padding:20px;text-align:center;"><p style="margin:0;font-size:16px;font-weight:bold;color:${D_PRIMARY_DARK};">AHORRO ANUAL CONSOLIDADO:</p><span style="font-size:32px;font-weight:bold;color:${GREEN_SAVE};display:block;margin-top:5px;">${eur(bd.savings)}</span><p style="margin:10px 0 0 0;font-size:18px;font-weight:bold;">¡AHORRO TOTAL PARA ${individualResults.length} SUMINISTROS!</p></td></tr></table>`;
         }
 
 
@@ -3083,6 +3223,7 @@
             };
             
             document.getElementById('execute-send-offer-btn').addEventListener('click', handleCopyOffer);
+            document.getElementById('execute-send-offer-iphone-btn').addEventListener('click', handleCopyOfferIPhone);
 
             document.getElementById('qr-toggle-checkbox').addEventListener('change', (e) => {
                 const wrapper = document.getElementById('qr-content-wrapper');
