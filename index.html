@@ -199,15 +199,15 @@
                 <div id="mode-selector-container" class="mb-8 pt-4 border-t border-slate-200">
                     <p class="text-sm font-bold text-drk-800 mb-3 text-center uppercase tracking-wider">MODO DE COMPARACIÓN</p>
                     <div id="comparison-mode-selectors" class="flex flex-wrap justify-center gap-2 text-sm">
-                        <label class="mode-selector flex-1 px-2 py-2 rounded-lg cursor-pointer transition border-2 border-drk-300 text-slate-600 bg-white hover:bg-drk-100 hover:border-drk-400">
+                        <label class="mode-selector flex-1 px-2 py-2 rounded-lg cursor-pointer transition border-2 border-drk-300 text-drk-700 bg-white hover:bg-drk-100 hover:border-drk-400">
                             <input type="radio" name="comparison_mode" value="drk_only" class="hidden">
                             <span class="font-semibold flex items-center justify-between w-full">DRK Únicamente<svg class="w-4 h-4 ml-1 checkmark-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span>
                         </label>
-                        <label class="mode-selector flex-1 px-2 py-2 rounded-lg cursor-pointer transition border-2 border-drk-500 text-white bg-drk-500">
+                        <label class="mode-selector flex-1 px-2 py-2 rounded-lg cursor-pointer transition border-2 border-drk-500 text-white bg-drk-500 hover:bg-drk-600">
                             <input type="radio" name="comparison_mode" value="drk_prioritized" class="hidden" checked>
                             <span class="font-semibold flex items-center justify-between w-full">DRK Prioritario<svg class="w-4 h-4 ml-1 checkmark-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span>
                         </label>
-                        <label class="mode-selector flex-1 px-2 py-2 rounded-lg cursor-pointer transition border-2 border-powercup-300 text-slate-600 bg-white hover:bg-powercup-100 hover:border-powercup-400">
+                        <label class="mode-selector flex-1 px-2 py-2 rounded-lg cursor-pointer transition border-2 border-powercup-300 text-powercup-700 bg-white hover:bg-powercup-100 hover:border-powercup-400">
                             <input type="radio" name="comparison_mode" value="overall_best" class="hidden">
                             <span class="font-black flex flex-col items-center justify-center w-full leading-tight">
                                 <span class="text-base">POWER CUP</span><span class="text-xs font-semibold -mt-0.5">Global</span>
@@ -3083,19 +3083,16 @@
                 const isSelected = r.value === newMode;
                 const colorClass = r.value === 'overall_best' ? 'powercup' : 'drk';
                 
-                // Limpiar clases de color de los bordes/fondos
-                label.classList.forEach(cls => {
-                    if (cls.startsWith('border-') || cls.startsWith('bg-') || cls.startsWith('text-') || cls.startsWith('hover:')) {
-                        label.classList.remove(cls);
-                    }
-                });
+                // Limpiar todas las clases de color
+                label.className = 'mode-selector flex-1 px-2 py-2 rounded-lg cursor-pointer transition border-2';
 
                 if (isSelected) {
+                    // Botón SELECCIONADO: fondo de color, texto blanco
                     label.classList.add(`border-${colorClass}-500`, `bg-${colorClass}-500`, 'text-white', `hover:bg-${colorClass}-600`);
-
                     label.querySelector('.checkmark-icon').classList.remove('hidden');
                 } else {
-                    label.classList.add(`border-${colorClass}-300`, 'bg-white', 'text-slate-600', `hover:bg-${colorClass}-100`, `hover:border-${colorClass}-400`);
+                    // Botón NO SELECCIONADO: fondo blanco, texto de color oscuro
+                    label.classList.add(`border-${colorClass}-300`, 'bg-white', `text-${colorClass}-700`, `hover:bg-${colorClass}-100`, `hover:border-${colorClass}-400`);
                     label.querySelector('.checkmark-icon').classList.add('hidden');
                 }
             });
