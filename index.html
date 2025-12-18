@@ -2591,22 +2591,22 @@
                     
                     ${finalSavingsSummary}
 
-                    <tr><td colspan="2" style="text-align:center;padding:30px 20px;background-color:#f8f9fa;">
-                        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;margin:0 auto;">
-                            <tr><td style="background:linear-gradient(135deg,#28a745 0%,#20c997 100%);padding:20px;border-radius:12px;text-align:center;">
-                                <p style="margin:0 0 15px 0;color:#fff;font-size:18px;font-weight:bold;">✅ ¿Listo para ahorrar?</p>
-                                <a href="${formalizationLink}" style="display:inline-block;background:#fff;color:#28a745;padding:16px 40px;text-decoration:none;font-weight:bold;font-size:18px;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
-                                    🎯 QUIERO LA OFERTA
-                                </a>
-                                <p style="margin:15px 0 0 0;color:#fff;font-size:12px;opacity:0.9;">Confirma tu aceptación con un clic</p>
-                            </td></tr>
-                            <tr><td style="padding:15px 0 0 0;text-align:center;">
-                                <p style="margin:0;font-size:11px;color:#6c757d;line-height:1.5;">
-                                    📄 Documentación necesaria: DNI/CIF, última factura, email y teléfono, IBAN<br>
-                                    💼 Colaborador: ${commercialCode} | Simulación basada en tu última factura
-                                </p>
-                            </td></tr>
-                        </table>
+                    <tr><td colspan="2" style="text-align: center; padding: 20px; background-color: #f8f9fa;">
+                        <div style="max-width: 500px; margin: 0 auto; padding: 20px; background: white; border-radius: 10px; border: 2px solid ${D_PRIMARY_MED};">
+                            <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: bold; color: ${D_PRIMARY_DARK};">📧 Para confirmar esta oferta:</p>
+                            <p style="margin: 0 0 15px 0; font-size: 13px; color: #555; line-height: 1.6;">
+                                1. Haz clic en el botón de abajo<br>
+                                2. Se abrirá tu cliente de email<br>
+                                3. <strong style="color: ${D_PRIMARY_DARK};">Adjunta la documentación requerida</strong><br>
+                                4. Envía el email
+                            </p>
+                            <a href="${formalizationLink}" style="${btnStyle}">✅ CONFIRMAR Y ENVIAR</a>
+                            <p style="margin: 15px 0 0 0; font-size: 11px; color: #666; line-height: 1.5;">
+                                📄 <strong>Documentación necesaria:</strong><br>
+                                DNI/CIF · Última factura · Email · Teléfono · IBAN
+                            </p>
+                        </div>
+                        <p style="font-size: 10px; color: #999; margin-top: 15px;">[Colaborador: ${commercialCode}] | Este resumen es una simulación basada en su última factura.</p>
                     </td></tr>
 
                     <tr><td colspan="2" style="padding: 0; height: 10px;"><div style="${footerStyle}"></div></td></tr>
@@ -2917,22 +2917,22 @@
                     
                     ${finalMultiSavingsSummary}
 
-                    <tr><td colspan="2" style="text-align:center;padding:30px 20px;background-color:#f8f9fa;">
-                        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;margin:0 auto;">
-                            <tr><td style="background:linear-gradient(135deg,#dc3545 0%,#c82333 100%);padding:20px;border-radius:12px;text-align:center;">
-                                <p style="margin:0 0 15px 0;color:#fff;font-size:18px;font-weight:bold;">📊 Oferta Consolidada Lista</p>
-                                <a href="${formalizationLink}" style="display:inline-block;background:#fff;color:#dc3545;padding:16px 40px;text-decoration:none;font-weight:bold;font-size:18px;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
-                                    ✅ FORMALIZAR OFERTA CONSOLIDADA
-                                </a>
-                                <p style="margin:15px 0 0 0;color:#fff;font-size:12px;opacity:0.9;">Consolida ${individualResults.length} suministros en una sola oferta</p>
-                            </td></tr>
-                            <tr><td style="padding:15px 0 0 0;text-align:center;">
-                                <p style="margin:0;font-size:11px;color:#6c757d;line-height:1.5;">
-                                    📄 Documentación necesaria por cada CUPS: DNI/CIF, facturas, email, teléfono, IBAN<br>
-                                    💼 Colaborador: ${commercialCode} | Simulación consolidada de ${individualResults.length} suministros
-                                </p>
-                            </td></tr>
-                        </table>
+                    <tr><td colspan="2" style="text-align: center; padding: 20px; background-color: #f8f9fa;">
+                        <div style="max-width: 500px; margin: 0 auto; padding: 20px; background: white; border-radius: 10px; border: 2px solid ${D_PRIMARY_MED};">
+                            <p style="margin: 0 0 15px 0; font-size: 16px; font-weight: bold; color: ${D_PRIMARY_DARK};">📊 Para formalizar esta oferta consolidada:</p>
+                            <p style="margin: 0 0 15px 0; font-size: 13px; color: #555; line-height: 1.6;">
+                                1. Haz clic en el botón de abajo<br>
+                                2. Se abrirá tu cliente de email<br>
+                                3. <strong style="color: ${D_PRIMARY_DARK};">Adjunta documentación de los ${individualResults.length} CUPS</strong><br>
+                                4. Envía el email
+                            </p>
+                            <a href="${formalizationLink}" style="${btnStyle}">✅ CONFIRMAR OFERTA CONSOLIDADA</a>
+                            <p style="margin: 15px 0 0 0; font-size: 11px; color: #666; line-height: 1.5;">
+                                📄 <strong>Por cada CUPS adjuntar:</strong><br>
+                                DNI/CIF · Última factura · Email · Teléfono · IBAN
+                            </p>
+                        </div>
+                        <p style="font-size: 10px; color: #999; margin-top: 15px;">[Colaborador: ${commercialCode}] | Este resumen es una simulación consolidada de ${individualResults.length} suministros.</p>
                     </td></tr>
 
                     <tr><td colspan="2" style="padding: 0; height: 5px;"><div style="${footerStyle}"></div></td></tr>
