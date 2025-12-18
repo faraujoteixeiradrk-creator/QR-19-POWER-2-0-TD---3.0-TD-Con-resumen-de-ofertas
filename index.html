@@ -2351,7 +2351,52 @@
 
             // --- PLANTILLA PARA AHORRO NEGATIVO ---
             if (bd.isNegativeSavings) {
-                return `<table cellpadding="0" cellspacing="0" style="${tableMain}">
+                const isDrkBrand = brand.NAME.includes('DRK');
+                const companyBanner = isDrkBrand ? `
+                    <div style="width: 600px; max-width: 100%; margin: 0 auto 20px auto; background: linear-gradient(to right, #0c4a6e, #075985, #164e63); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 20px;">
+                                    <table cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                <h1 style="margin: 0; color: white; font-size: 32px; font-weight: 900; letter-spacing: -0.5px; font-family: Arial, sans-serif;">DRK ENERGÍA</h1>
+                                                <p style="margin: 5px 0 0 0; color: #bae6fd; font-size: 14px; font-weight: 500; font-family: Arial, sans-serif;">Liderando el ahorro y la eficiencia energética.</p>
+                                            </td>
+                                            <td style="text-align: right; vertical-align: middle;">
+                                                <p style="margin: 0; color: #e0f2fe; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Estudio de Ahorro</p>
+                                                <p style="margin: 3px 0 0 0; color: white; font-size: 16px; font-weight: 900;">COMPARATIVA PROFESIONAL</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                ` : `
+                    <div style="width: 600px; max-width: 100%; margin: 0 auto 20px auto; background: linear-gradient(to right, #ffffff, #f7fee7, #ffffff); border: 3px solid #84cc16; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 20px;">
+                                    <table cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                <h1 style="margin: 0; color: #365314; font-size: 32px; font-weight: 900; letter-spacing: -0.5px; font-family: Arial, sans-serif;">POWER CUP</h1>
+                                                <p style="margin: 5px 0 0 0; color: #4d7c0f; font-size: 14px; font-weight: 600; font-family: Arial, sans-serif;">Asesoría Energética</p>
+                                            </td>
+                                            <td style="text-align: right; vertical-align: middle;">
+                                                <p style="margin: 0; color: #65a30d; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Estudio de Ahorro</p>
+                                                <p style="margin: 3px 0 0 0; color: #365314; font-size: 16px; font-weight: 900;">COMPARATIVA PROFESIONAL</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                `;
+                
+                return companyBanner + `<table cellpadding="0" cellspacing="0" style="${tableMain}">
                         <tr><td colspan="2" style="${headerCell}">
                             <h1 style="margin:0; font-size: 24px;">ESTUDIO DE AHORRO</h1>
                             <p style="margin:5px 0 0 0; font-size: 14px; opacity: 0.9;">TU TARIFA ACTUAL ES LA MÁS COMPETITIVA</p>
@@ -2459,8 +2504,53 @@
                 </td></tr>
             `;
 
+            // NUEVO: Banner de empresa para email
+            const isDrkBrand = brand.NAME.includes('DRK');
+            const companyBanner = isDrkBrand ? `
+                <div style="width: 600px; max-width: 100%; margin: 0 auto 20px auto; background: linear-gradient(to right, #0c4a6e, #075985, #164e63); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 20px;">
+                                <table cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td style="vertical-align: middle;">
+                                            <h1 style="margin: 0; color: white; font-size: 32px; font-weight: 900; letter-spacing: -0.5px; font-family: Arial, sans-serif;">DRK ENERGÍA</h1>
+                                            <p style="margin: 5px 0 0 0; color: #bae6fd; font-size: 14px; font-weight: 500; font-family: Arial, sans-serif;">Liderando el ahorro y la eficiencia energética.</p>
+                                        </td>
+                                        <td style="text-align: right; vertical-align: middle;">
+                                            <p style="margin: 0; color: #e0f2fe; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Estudio de Ahorro</p>
+                                            <p style="margin: 3px 0 0 0; color: white; font-size: 16px; font-weight: 900;">COMPARATIVA PROFESIONAL</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            ` : `
+                <div style="width: 600px; max-width: 100%; margin: 0 auto 20px auto; background: linear-gradient(to right, #ffffff, #f7fee7, #ffffff); border: 3px solid #84cc16; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 20px;">
+                                <table cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td style="vertical-align: middle;">
+                                            <h1 style="margin: 0; color: #365314; font-size: 32px; font-weight: 900; letter-spacing: -0.5px; font-family: Arial, sans-serif;">POWER CUP</h1>
+                                            <p style="margin: 5px 0 0 0; color: #4d7c0f; font-size: 14px; font-weight: 600; font-family: Arial, sans-serif;">Asesoría Energética</p>
+                                        </td>
+                                        <td style="text-align: right; vertical-align: middle;">
+                                            <p style="margin: 0; color: #65a30d; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Estudio de Ahorro</p>
+                                            <p style="margin: 3px 0 0 0; color: #365314; font-size: 16px; font-weight: 900;">COMPARATIVA PROFESIONAL</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            `;
 
-            return `<table cellpadding="0" cellspacing="0" style="${tableMain}">
+            return companyBanner + `<table cellpadding="0" cellspacing="0" style="${tableMain}">
                     <tr><td colspan="2" style="${headerCell}">
                         <h1 style="margin:0; font-size: 24px;">ESTUDIO DE AHORRO</h1>
                         <p style="margin:5px 0 0 0; font-size: 14px; opacity: 0.9;">COMPARATIVA PROFESIONAL - ${D_BRAND_NAME.toUpperCase()}</p>
@@ -2751,8 +2841,53 @@
                 </td></tr>
             `;
 
+            // NUEVO: Banner de empresa para email MultiCups
+            const isDrkBrand = dynamicBrand.NAME.includes('DRK');
+            const companyBanner = isDrkBrand ? `
+                <div style="width: 600px; max-width: 100%; margin: 0 auto 20px auto; background: linear-gradient(to right, #0c4a6e, #075985, #164e63); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 20px;">
+                                <table cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td style="vertical-align: middle;">
+                                            <h1 style="margin: 0; color: white; font-size: 32px; font-weight: 900; letter-spacing: -0.5px; font-family: Arial, sans-serif;">DRK ENERGÍA</h1>
+                                            <p style="margin: 5px 0 0 0; color: #bae6fd; font-size: 14px; font-weight: 500; font-family: Arial, sans-serif;">Liderando el ahorro y la eficiencia energética.</p>
+                                        </td>
+                                        <td style="text-align: right; vertical-align: middle;">
+                                            <p style="margin: 0; color: #e0f2fe; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Estudio de Ahorro</p>
+                                            <p style="margin: 3px 0 0 0; color: white; font-size: 16px; font-weight: 900;">COMPARATIVA PROFESIONAL</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            ` : `
+                <div style="width: 600px; max-width: 100%; margin: 0 auto 20px auto; background: linear-gradient(to right, #ffffff, #f7fee7, #ffffff); border: 3px solid #84cc16; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 20px;">
+                                <table cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td style="vertical-align: middle;">
+                                            <h1 style="margin: 0; color: #365314; font-size: 32px; font-weight: 900; letter-spacing: -0.5px; font-family: Arial, sans-serif;">POWER CUP</h1>
+                                            <p style="margin: 5px 0 0 0; color: #4d7c0f; font-size: 14px; font-weight: 600; font-family: Arial, sans-serif;">Asesoría Energética</p>
+                                        </td>
+                                        <td style="text-align: right; vertical-align: middle;">
+                                            <p style="margin: 0; color: #65a30d; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Estudio de Ahorro</p>
+                                            <p style="margin: 3px 0 0 0; color: #365314; font-size: 16px; font-weight: 900;">COMPARATIVA PROFESIONAL</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            `;
 
-            return `<table cellpadding="0" cellspacing="0" style="${tableMain}">
+            return companyBanner + `<table cellpadding="0" cellspacing="0" style="${tableMain}">
                     <tr><td colspan="2" style="${headerCell}">
                         <h1 style="margin:0; font-size: 24px;">ESTUDIO CONSOLIDADO DE AHORRO</h1>
                         <p style="margin:5px 0 0 0; font-size: 14px; opacity: 0.9;">ANÁLISIS DE ${individualResults.length} SUMINISTROS (2.0TD + 3.0TD)</p>
