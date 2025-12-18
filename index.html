@@ -441,14 +441,6 @@
             <div id="details-container" class="hidden space-y-6">
             </div>
 
-            <!-- Botón de QUIERO OFERTA (solo visible cuando hay resultado) -->
-            <div id="want-offer-container" class="mt-6 hidden">
-                <button id="want-offer-btn" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-black py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transform hover:scale-[1.02] transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    ✅ QUIERO ESTA OFERTA
-                </button>
-            </div>
-
             <div class="mt-8">
                 <button onclick="resetToLanding()" class="w-full bg-white border-2 border-slate-200 hover:border-drk-500 text-slate-600 hover:text-drk-800 font-bold py-4 rounded-xl transition flex items-center justify-center gap-2">
                     Realizar Nueva Comparación
@@ -570,126 +562,6 @@
                     📧 COPIAR COMPARATIVO (HTML)
                 </button>
                 <button onclick="document.getElementById('send-offer-modal').classList.add('hidden'); document.getElementById('send-offer-modal').classList.remove('flex');" class="w-full bg-slate-200 font-bold py-3 rounded-xl text-sm">Cancelar</button>
-            </div>
-        </div>
-
-        <!-- 9.5. Modal de Confirmación Visual de Oferta -->
-        <div id="offer-confirmation-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50 backdrop-blur-sm">
-            <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                <!-- Header -->
-                <div class="bg-gradient-to-r from-green-600 to-green-700 p-6 text-white">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-2xl font-black">✅ ¡CONFIRMAR OFERTA!</h3>
-                            <p class="text-green-100 text-sm mt-1">Revisa los datos antes de enviar</p>
-                        </div>
-                        <button onclick="closeOfferConfirmationModal()" class="text-white hover:text-green-100">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Content -->
-                <div class="p-6">
-                    <!-- Ahorro destacado -->
-                    <div class="bg-green-50 border-2 border-green-200 rounded-xl p-6 text-center mb-6">
-                        <p class="text-green-700 font-bold text-sm mb-2">💰 AHORRO ANUAL ESTIMADO</p>
-                        <p id="modal-offer-savings" class="text-5xl font-black text-green-600">420,22 €</p>
-                        <p class="text-green-600 text-sm mt-2">¡Excelente ahorro para tu cliente!</p>
-                    </div>
-                    
-                    <!-- Datos principales -->
-                    <div class="grid md:grid-cols-2 gap-4 mb-6">
-                        <div class="bg-slate-50 rounded-lg p-4">
-                            <p class="text-xs text-slate-500 font-bold mb-2">📋 DATOS DEL SUMINISTRO</p>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between">
-                                    <span class="text-slate-600">CUPS:</span>
-                                    <span id="modal-offer-cups" class="font-mono font-bold text-slate-800">ES00...</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-slate-600">Consumo:</span>
-                                    <span id="modal-offer-consumption" class="font-bold text-slate-800">658 kWh</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-blue-50 rounded-lg p-4">
-                            <p class="text-xs text-blue-700 font-bold mb-2">⚡ TARIFA SELECCIONADA</p>
-                            <p id="modal-offer-name" class="font-bold text-blue-900 text-sm mb-1">DRK FIJO 2 META</p>
-                            <p class="text-xs text-blue-600">Zona: PENINSULA</p>
-                            <p id="modal-offer-monthly" class="text-lg font-black text-blue-900 mt-2">124,95 €/mes</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Precios detallados -->
-                    <div class="bg-slate-50 rounded-lg p-4 mb-6">
-                        <p class="text-xs text-slate-700 font-bold mb-3">💡 PRECIOS DE LA OFERTA</p>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                            <div class="bg-white p-2 rounded">
-                                <span class="text-slate-500">P1 Potencia:</span>
-                                <p id="modal-offer-p1" class="font-mono font-bold">0,099000 €</p>
-                            </div>
-                            <div class="bg-white p-2 rounded">
-                                <span class="text-slate-500">P2 Potencia:</span>
-                                <p id="modal-offer-p2" class="font-mono font-bold">0,099000 €</p>
-                            </div>
-                            <div class="bg-white p-2 rounded">
-                                <span class="text-slate-500">E1 Energía:</span>
-                                <p id="modal-offer-e1" class="font-mono font-bold text-green-600">0,099000 €</p>
-                            </div>
-                            <div class="bg-white p-2 rounded">
-                                <span class="text-slate-500">E2 Energía:</span>
-                                <p id="modal-offer-e2" class="font-mono font-bold text-green-600">0,099000 €</p>
-                            </div>
-                            <div class="bg-white p-2 rounded">
-                                <span class="text-slate-500">E3 Energía:</span>
-                                <p id="modal-offer-e3" class="font-mono font-bold text-green-600">0,099000 €</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Datos del cliente -->
-                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-                        <p class="text-xs text-amber-800 font-bold mb-3">👤 DATOS DEL CLIENTE</p>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-amber-700">Nombre:</span>
-                                <span id="modal-client-name" class="font-bold text-amber-900">[NOMBRE]</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-amber-700">Teléfono:</span>
-                                <span id="modal-client-phone" class="font-mono text-amber-900">[TELÉFONO]</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-amber-700">Email:</span>
-                                <span id="modal-client-email" class="font-mono text-amber-900">[EMAIL]</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Documentación requerida -->
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                        <p class="text-xs text-blue-800 font-bold mb-2">📄 DOCUMENTACIÓN REQUERIDA</p>
-                        <ul class="text-xs text-blue-700 space-y-1">
-                            <li>✓ Foto DNI/CIF (anverso y reverso)</li>
-                            <li>✓ Última factura (mín. 3 meses antigüedad)</li>
-                            <li>✓ Email y teléfono de contacto</li>
-                            <li>✓ Número de cuenta bancaria (IBAN)</li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Botones de acción -->
-                    <div class="space-y-3">
-                        <button id="confirm-offer-email-btn" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-black py-4 rounded-xl shadow-lg flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            ✅ CONFIRMAR Y ABRIR EMAIL
-                        </button>
-                        <button onclick="closeOfferConfirmationModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 rounded-xl">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -856,46 +728,6 @@
 
         window.showMessageModal = (msg, title="Éxito") => setModalContent(msg, title, false);
         window.showErrorModal = (msg, title="¡Atención!") => setModalContent(msg, title, true);
-        
-        // Funciones para el modal de confirmación de oferta
-        let currentOfferMailtoLink = '';
-        
-        window.showOfferConfirmationModal = (offerData, mailtoLink) => {
-            currentOfferMailtoLink = mailtoLink;
-            
-            // Rellenar los datos en el modal
-            document.getElementById('modal-offer-savings').textContent = offerData.savings;
-            document.getElementById('modal-offer-cups').textContent = offerData.cups;
-            document.getElementById('modal-offer-consumption').textContent = offerData.consumption;
-            document.getElementById('modal-offer-name').textContent = offerData.tariffName;
-            document.getElementById('modal-offer-monthly').textContent = offerData.monthly;
-            document.getElementById('modal-offer-p1').textContent = offerData.p1;
-            document.getElementById('modal-offer-p2').textContent = offerData.p2;
-            document.getElementById('modal-offer-e1').textContent = offerData.e1;
-            document.getElementById('modal-offer-e2').textContent = offerData.e2;
-            document.getElementById('modal-offer-e3').textContent = offerData.e3;
-            document.getElementById('modal-client-name').textContent = offerData.clientName;
-            document.getElementById('modal-client-phone').textContent = offerData.clientPhone;
-            document.getElementById('modal-client-email').textContent = offerData.clientEmail;
-            
-            // Mostrar el modal
-            document.getElementById('offer-confirmation-modal').classList.remove('hidden');
-            document.getElementById('offer-confirmation-modal').classList.add('flex');
-        };
-        
-        window.closeOfferConfirmationModal = () => {
-            document.getElementById('offer-confirmation-modal').classList.add('hidden');
-            document.getElementById('offer-confirmation-modal').classList.remove('flex');
-            currentOfferMailtoLink = '';
-        };
-        
-        // Event listener para el botón de confirmar email
-        document.getElementById('confirm-offer-email-btn').addEventListener('click', () => {
-            if (currentOfferMailtoLink) {
-                window.location.href = currentOfferMailtoLink;
-                closeOfferConfirmationModal();
-            }
-        });
         
         function cleanupPasteCatcher() {
             const pasteCatcher = document.getElementById('paste-catcher');
@@ -2387,52 +2219,6 @@
                 </div>
             `;
             
-            // Configurar y mostrar botón "QUIERO OFERTA"
-            const wantOfferContainer = document.getElementById('want-offer-container');
-            const wantOfferBtn = document.getElementById('want-offer-btn');
-            
-            // Mostrar el botón
-            wantOfferContainer.classList.remove('hidden');
-            
-            // Preparar datos para el modal
-            const offerData = {
-                savings: eur(res.savings),
-                cups: res.cups,
-                consumption: `${num(res.energyCosts.reduce((sum, e) => sum + e.kwh, 0), 0)} kWh`,
-                tariffName: offer.isDrk ? `${offer.name} - ${offer.description}` : offer.name,
-                monthly: `${eur(res.totalAnnual / 12)}/mes`,
-                p1: `${numPriceFormula(res.powerCosts.find(p => p.period === 1)?.priceDay || 0)} €/kW/día`,
-                p2: `${numPriceFormula(res.powerCosts.find(p => p.period === 2)?.priceDay || 0)} €/kW/día`,
-                e1: `${numPriceFormula(res.energyCosts.find(e => e.period === 1)?.price || 0)} €/kWh`,
-                e2: `${numPriceFormula(res.energyCosts.find(e => e.period === 2)?.price || 0)} €/kWh`,
-                e3: `${numPriceFormula(res.energyCosts.find(e => e.period === 3)?.price || 0)} €/kWh`,
-                clientName: document.getElementById('client-name-input')?.value || '[NOMBRE COMPLETO CLIENTE]',
-                clientPhone: document.getElementById('client-phone-input')?.value || '[TELÉFONO CLIENTE]',
-                clientEmail: document.getElementById('client-email-input')?.value || '[EMAIL CLIENTE]'
-            };
-            
-            // Generar mailto link
-            const LB = '%0A';
-            const emailBody = `Hola ${brand.NAME.toUpperCase()}, confirmo la aceptación de la oferta con CUPS: ${res.cups}.${LB}${LB}` +
-                `--- DATOS DE LA OFERTA ---${LB}${LB}` +
-                `Comercializadora y Tarifa: ${offerData.tariffName}${LB}` +
-                `Zona Geográfica: PENINSULA${LB}` +
-                `Ahorro Anual Estimado: ${offerData.savings}${LB}` +
-                `Total Mensual Estimado: ${offerData.monthly}${LB}` +
-                `Consumo Total Facturado: ${offerData.consumption}${LB}${LB}` +
-                `--- DATOS DEL CLIENTE ---${LB}` +
-                `Nombre completo: ${offerData.clientName}${LB}` +
-                `Teléfono de contacto: ${offerData.clientPhone}${LB}` +
-                `Email de contacto: ${offerData.clientEmail}${LB}${LB}` +
-                `--- DOCUMENTACIÓN REQUERIDA ---${LB}${LB}` +
-                `Adjunto la documentación requerida.`;
-            
-            const subject = `FORMALIZACIÓN DE CONTRATO - CUPS: ${res.cups}`;
-            const mailtoLink = `mailto:f.araujo@drk.es,r.guerra@drk.es,s.caballero@drk.es?subject=${encodeURIComponent(subject)}&body=${emailBody}`;
-            
-            // Asignar evento al botón
-            wantOfferBtn.onclick = () => showOfferConfirmationModal(offerData, mailtoLink);
-            
             console.log('renderResultsUI completed successfully');
             } catch (error) {
                 console.error('Error in renderResultsUI:', error);
@@ -2805,9 +2591,22 @@
                     
                     ${finalSavingsSummary}
 
-                    <tr><td colspan="2" style="text-align: center; padding: 0 20px 20px 20px;">
-                        <a href="${formalizationLink}" style="${btnStyle}">QUIERO LA OFERTA</a>
-                        <p style="font-size: 10px; color: #999; margin-top: 10px;">[Colaborador: ${commercialCode}] | Este resumen es una simulación basada en su última factura.</p>
+                    <tr><td colspan="2" style="text-align:center;padding:30px 20px;background-color:#f8f9fa;">
+                        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;margin:0 auto;">
+                            <tr><td style="background:linear-gradient(135deg,#28a745 0%,#20c997 100%);padding:20px;border-radius:12px;text-align:center;">
+                                <p style="margin:0 0 15px 0;color:#fff;font-size:18px;font-weight:bold;">✅ ¿Listo para ahorrar?</p>
+                                <a href="${formalizationLink}" style="display:inline-block;background:#fff;color:#28a745;padding:16px 40px;text-decoration:none;font-weight:bold;font-size:18px;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                    🎯 QUIERO LA OFERTA
+                                </a>
+                                <p style="margin:15px 0 0 0;color:#fff;font-size:12px;opacity:0.9;">Confirma tu aceptación con un clic</p>
+                            </td></tr>
+                            <tr><td style="padding:15px 0 0 0;text-align:center;">
+                                <p style="margin:0;font-size:11px;color:#6c757d;line-height:1.5;">
+                                    📄 Documentación necesaria: DNI/CIF, última factura, email y teléfono, IBAN<br>
+                                    💼 Colaborador: ${commercialCode} | Simulación basada en tu última factura
+                                </p>
+                            </td></tr>
+                        </table>
                     </td></tr>
 
                     <tr><td colspan="2" style="padding: 0; height: 10px;"><div style="${footerStyle}"></div></td></tr>
@@ -3118,9 +2917,22 @@
                     
                     ${finalMultiSavingsSummary}
 
-                    <tr><td colspan="2" style="text-align: center; padding: 0 20px 20px 20px;">
-                        <a href="${formalizationLink}" style="${btnStyle}">FORMALIZAR OFERTA CONSOLIDADA</a>
-                        <p style="font-size: 10px; color: #999; margin-top: 10px;">[Colaborador: ${commercialCode}] | Este resumen es una simulación consolidada.</p>
+                    <tr><td colspan="2" style="text-align:center;padding:30px 20px;background-color:#f8f9fa;">
+                        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;margin:0 auto;">
+                            <tr><td style="background:linear-gradient(135deg,#dc3545 0%,#c82333 100%);padding:20px;border-radius:12px;text-align:center;">
+                                <p style="margin:0 0 15px 0;color:#fff;font-size:18px;font-weight:bold;">📊 Oferta Consolidada Lista</p>
+                                <a href="${formalizationLink}" style="display:inline-block;background:#fff;color:#dc3545;padding:16px 40px;text-decoration:none;font-weight:bold;font-size:18px;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                    ✅ FORMALIZAR OFERTA CONSOLIDADA
+                                </a>
+                                <p style="margin:15px 0 0 0;color:#fff;font-size:12px;opacity:0.9;">Consolida ${individualResults.length} suministros en una sola oferta</p>
+                            </td></tr>
+                            <tr><td style="padding:15px 0 0 0;text-align:center;">
+                                <p style="margin:0;font-size:11px;color:#6c757d;line-height:1.5;">
+                                    📄 Documentación necesaria por cada CUPS: DNI/CIF, facturas, email, teléfono, IBAN<br>
+                                    💼 Colaborador: ${commercialCode} | Simulación consolidada de ${individualResults.length} suministros
+                                </p>
+                            </td></tr>
+                        </table>
                     </td></tr>
 
                     <tr><td colspan="2" style="padding: 0; height: 5px;"><div style="${footerStyle}"></div></td></tr>
