@@ -382,6 +382,11 @@
 
         <!-- 5. Results View -->
         <div id="results-view" class="hidden animate-fade-in-up">
+            <!-- Banner de Empresa -->
+            <div id="company-banner" class="mb-8 rounded-2xl overflow-hidden shadow-lg">
+                <!-- El contenido del banner se generará dinámicamente según la marca activa -->
+            </div>
+            
             <div class="text-center mb-6">
                 <div class="inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold mb-2">
                     <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Análisis Completado
@@ -1555,11 +1560,48 @@
             let brand = activeBrand; // Use activeBrand set by comparisonMode
             const individualResults = res.individualResults;
             const aggregatedData = res.aggregatedData;
+            const isDrk = brand.NAME.includes('DRK');
             
             // FIX: Usar funciones robustas contra NaN
             const eur = n => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n || 0);
             const num = (n, d=2) => new Intl.NumberFormat('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n || 0);
             const numPriceFormula = (n) => new Intl.NumberFormat('es-ES', { minimumFractionDigits: 6, maximumFractionDigits: 6 }).format(n || 0);
+            
+            // NUEVO: Generar banner de empresa dinámico para MultiCups
+            const companyBanner = document.getElementById('company-banner');
+            if (isDrk) {
+                companyBanner.innerHTML = `
+                    <div class="bg-gradient-to-r from-drk-900 via-drk-800 to-drk-700 p-6 md:p-8 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            ${brand.LOGO_SVG}
+                            <div>
+                                <h1 class="text-white text-3xl md:text-4xl font-black tracking-tight">DRK ENERGÍA</h1>
+                                <p class="text-drk-100 text-sm md:text-base font-medium">Liderando el ahorro y la eficiencia energética.</p>
+                            </div>
+                        </div>
+                        <div class="hidden md:block text-right">
+                            <p class="text-drk-200 text-xs font-bold uppercase tracking-wider">Estudio de Ahorro</p>
+                            <p class="text-white text-lg font-black">COMPARATIVA PROFESIONAL</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                companyBanner.innerHTML = `
+                    <div class="bg-gradient-to-r from-white via-powercup-50 to-white p-6 md:p-8 border-2 border-powercup-500 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            ${brand.LOGO_SVG}
+                            <div>
+                                <h1 class="text-powercup-900 text-3xl md:text-4xl font-black tracking-tight">POWER CUP</h1>
+                                <p class="text-powercup-700 text-sm md:text-base font-semibold">Asesoría Energética</p>
+                            </div>
+                        </div>
+                        <div class="hidden md:block text-right">
+                            <p class="text-powercup-600 text-xs font-bold uppercase tracking-wider">Estudio de Ahorro</p>
+                            <p class="text-powercup-900 text-lg font-black">COMPARATIVA PROFESIONAL</p>
+                        </div>
+                    </div>
+                `;
+            }
             
             // 1. Cabecera y Resumen Global
             document.getElementById('results-cups-list').innerHTML = `
@@ -1900,6 +1942,44 @@
             const eur = n => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n || 0);
             const num = (n, d=2) => new Intl.NumberFormat('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n || 0);
             const numPriceFormula = (n) => new Intl.NumberFormat('es-ES', { minimumFractionDigits: 6, maximumFractionDigits: 6 }).format(n || 0);
+            
+            // NUEVO: Generar banner de empresa dinámico
+            const companyBanner = document.getElementById('company-banner');
+            if (isDrk) {
+                // Banner DRK - Estilo elegante azul
+                companyBanner.innerHTML = `
+                    <div class="bg-gradient-to-r from-drk-900 via-drk-800 to-drk-700 p-6 md:p-8 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            ${brand.LOGO_SVG}
+                            <div>
+                                <h1 class="text-white text-3xl md:text-4xl font-black tracking-tight">DRK ENERGÍA</h1>
+                                <p class="text-drk-100 text-sm md:text-base font-medium">Liderando el ahorro y la eficiencia energética.</p>
+                            </div>
+                        </div>
+                        <div class="hidden md:block text-right">
+                            <p class="text-drk-200 text-xs font-bold uppercase tracking-wider">Estudio de Ahorro</p>
+                            <p class="text-white text-lg font-black">COMPARATIVA PROFESIONAL</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Banner POWER CUP - Estilo energético verde
+                companyBanner.innerHTML = `
+                    <div class="bg-gradient-to-r from-white via-powercup-50 to-white p-6 md:p-8 border-2 border-powercup-500 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            ${brand.LOGO_SVG}
+                            <div>
+                                <h1 class="text-powercup-900 text-3xl md:text-4xl font-black tracking-tight">POWER CUP</h1>
+                                <p class="text-powercup-700 text-sm md:text-base font-semibold">Asesoría Energética</p>
+                            </div>
+                        </div>
+                        <div class="hidden md:block text-right">
+                            <p class="text-powercup-600 text-xs font-bold uppercase tracking-wider">Estudio de Ahorro</p>
+                            <p class="text-powercup-900 text-lg font-black">COMPARATIVA PROFESIONAL</p>
+                        </div>
+                    </div>
+                `;
+            }
             
             // 1. Cabecera y Resumen
             document.getElementById('results-cups-list').innerHTML = `
