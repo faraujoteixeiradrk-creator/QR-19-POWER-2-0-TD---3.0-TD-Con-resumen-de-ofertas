@@ -2882,7 +2882,7 @@
             const PC_DARK = '#3f6212'; const PC_MED = '#65a30d'; const PC_CTA = '#84cc16';
 
             // --- Determine Dynamic Branding for Email Copy ---
-            const { winningOffers } = getWinningOffersPerType(individualResults);
+            const { winningOffers, hasDrkWinner } = getWinningOffersPerType(individualResults);
 
             let dynamicBrand = activeBrand; // Use the current active brand (set by comparison mode)
             
