@@ -4412,6 +4412,10 @@
             let finalIndividualResult = bestOverall;
             
             // --- GUARDAR OFERTAS PARA SELECCIÓN MANUAL ---
+            
+            // DEBUG INCONDICIONAL: Este alert SIEMPRE debe aparecer
+            alert(`SAVESUPLY REACHED:\ncomparisonMode: ${comparisonMode}\ntariffType: ${tariffType}\ncurrentTariffType: ${currentTariffType}\nresults.length: ${results.length}`);
+            
             // En MultiCups, permitir elegir entre TODAS las ofertas (con o sin ahorro)
             // para dar al usuario la máxima flexibilidad
             // CRÍTICO: Verificar currentTariffType (que indica el modo general)
