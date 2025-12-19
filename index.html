@@ -3846,23 +3846,64 @@
                 // pero con la OFERTA seleccionada manualmente
                 console.log('MultiCups context: recalculating costs for selected offer');
                 
+                // CRÍTICO: Si la oferta viene de selección manual, buscar la tarifa ORIGINAL
+                let offerToUse = result.offer;
+                
+                if (result._needsOriginalLookup) {
+                    const tariffType = lastComparisonResult.originalTariffType;
+                    console.log('🔍 Looking up original tariff in currentTariffs[' + tariffType + ']');
+                    console.log('Searching for:', result.offer.name, '/', result.offer.description);
+                    
+                    const originalTariff = currentTariffs[tariffType]?.find(t => 
+                        t.name === result.offer.name && t.description === result.offer.description
+                    );
+                    
+                    if (originalTariff) {
+                        console.log('✅ Found original tariff, using it instead of contaminated offer');
+                        offerToUse = originalTariff;
+                    } else {
+                        console.error('❌ Original tariff not found, using provided offer (may be contaminated)');
+                    }
+                }
+                
                 // Usar la función centralizada para recalcular costes
-                // Esta función buscará la tarifa original en currentTariffs
-                const recalculated = recalculateCostsForOffer(lastComparisonResult, result.offer);
+                const recalculated = recalculateCostsForOffer(lastComparisonResult, offerToUse);
+                
+                // CRÍTICO: Recalcular totalAnnual y savings usando los costes recalculados
+                // No usar result.totalAnnual que puede estar contaminado
+                const IVA_RATE = 0.21;
+                const IE_RATE = 0.05113;
+                const diasFacturados = lastComparisonResult.dias_facturados || 30;
+                const factorAnual = 365 / diasFacturados;
+                
+                const subBase = recalculated.subPower + recalculated.subEnergyNet;
+                const costIE = subBase * IE_RATE;
+                const baseImp = subBase + costIE;
+                const costIVA = baseImp * IVA_RATE;
+                const totalPeriod = baseImp + costIVA;
+                const totalAnnual = totalPeriod * factorAnual;
+                const originalBillAnnual = lastComparisonResult.originalBillAnnual;
+                const savings = originalBillAnnual - totalAnnual;
+                
+                console.log('Recalculated totalAnnual:', totalAnnual, 'savings:', savings);
                 
                 // Crear un nuevo objeto combinando lastComparisonResult (datos base) 
                 // con la oferta elegida manualmente y los costes recalculados
                 const combinedResult = {
                     ...lastComparisonResult,  // Todos los datos base (CUPS, consumos, potencias, etc.)
-                    offer: deepCopyOffer(result.offer),  // COPIA PROFUNDA de la oferta
-                    totalAnnual: result.totalAnnual,  // Coste anual de la oferta elegida
-                    totalPeriod: result.totalPeriod,  // Coste periodo de la oferta elegida
-                    savings: result.savings,          // Ahorro de la oferta elegida
+                    offer: deepCopyOffer(offerToUse),  // COPIA PROFUNDA de la oferta ORIGINAL
+                    totalAnnual: totalAnnual,  // Coste anual RECALCULADO
+                    totalPeriod: totalPeriod,  // Coste periodo RECALCULADO
+                    savings: savings,          // Ahorro RECALCULADO
                     energyCosts: recalculated.energyCosts,  // Desglose RECALCULADO de energía
                     powerCosts: recalculated.powerCosts,    // Desglose RECALCULADO de potencia
                     subPower: recalculated.subPower,        // Subtotal RECALCULADO de potencia
                     subEnergyNet: recalculated.subEnergyNet, // Subtotal RECALCULADO de energía
-                    isNegativeSavings: result.isNegativeSavings || false
+                    subBase: subBase,
+                    costIE: costIE,
+                    baseImp: baseImp,
+                    costIVA: costIVA,
+                    isNegativeSavings: savings <= 0
                 };
                 
                 console.log('Combined result with recalculated costs:', combinedResult);
