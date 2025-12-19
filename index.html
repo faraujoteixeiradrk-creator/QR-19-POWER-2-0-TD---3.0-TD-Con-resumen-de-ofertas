@@ -217,6 +217,7 @@
                     </div>
                 </div>
                 
+                
                 <!-- Tariff Selection Buttons -->
                 <div class="w-full space-y-4">
                     <button onclick="selectTariffType('MULTICUPS')" class="tariff-select-btn group">
@@ -565,6 +566,147 @@
             </div>
         </div>
 
+        <!-- 9.8. Modal de Decisión (Mejor Opción vs Elegir) -->
+        <div id="offer-decision-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-drk-600 to-drk-700 p-6 text-white">
+                    <h3 class="text-2xl font-black">✅ Cálculo Completado</h3>
+                    <p class="text-drk-100 text-sm mt-1">Hemos encontrado ofertas con ahorro. ¿Cómo quieres continuar?</p>
+                </div>
+                
+                <!-- Content -->
+                <div class="p-6">
+                    <div class="flex flex-col gap-4">
+                        <!-- Opción 1: Mejor Opción -->
+                        <button onclick="selectBestOptionDirect()" class="text-left p-6 rounded-xl border-2 border-slate-300 bg-white hover:border-drk-500 hover:bg-drk-50 transition group">
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0 group-hover:bg-yellow-200">
+                                    🏆
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-black text-lg text-slate-900 mb-2">VER MEJOR OPCIÓN</p>
+                                    <p class="text-sm text-slate-600">Muestra automáticamente la oferta con mayor ahorro y genera la comparativa</p>
+                                </div>
+                                <svg class="w-6 h-6 text-slate-400 group-hover:text-drk-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </div>
+                        </button>
+                        
+                        <!-- Opción 2: Elegir Manual -->
+                        <button onclick="selectFromResults()" class="text-left p-6 rounded-xl border-2 border-slate-300 bg-white hover:border-drk-500 hover:bg-drk-50 transition group">
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-200">
+                                    📋
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-black text-lg text-slate-900 mb-2">ELEGIR ENTRE RESULTADOS</p>
+                                    <p class="text-sm text-slate-600">Revisa todas las ofertas con ahorro positivo y elige la que prefieras</p>
+                                </div>
+                                <svg class="w-6 h-6 text-slate-400 group-hover:text-drk-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <!-- Info adicional -->
+                    <div class="mt-6 p-4 bg-slate-50 rounded-lg">
+                        <p class="text-xs text-slate-600">
+                            💡 <strong>Consejo:</strong> Si quieres ver rápidamente la mejor oferta, elige la primera opción. 
+                            Si necesitas comparar varias opciones o el cliente tiene preferencias específicas, elige la segunda.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9.9. Modal de Selección de Oferta -->
+        <div id="offer-selection-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-drk-600 to-drk-700 p-6 text-white flex-shrink-0">
+                    <h3 class="text-2xl font-black">📋 SELECCIONA TU OFERTA</h3>
+                    <p class="text-drk-100 text-sm mt-1">Hemos calculado todas las opciones con ahorro. Elige la que prefieras.</p>
+                </div>
+                
+                <!-- Content -->
+                <div class="p-6 overflow-y-auto flex-1">
+                    <!-- Info del CUPS -->
+                    <div class="bg-slate-50 rounded-lg p-4 mb-4">
+                        <p class="text-xs font-bold text-slate-600 mb-2">📋 DATOS DEL SUMINISTRO</p>
+                        <p class="text-sm font-mono" id="modal-selection-cups"></p>
+                    </div>
+                    
+                    <!-- NUEVO: Controles de Filtrado y Ordenación -->
+                    <div class="bg-white border-2 border-drk-200 rounded-xl p-4 mb-4">
+                        <div class="flex flex-col md:flex-row gap-3">
+                            <!-- Filtro por nombre -->
+                            <div class="flex-1">
+                                <label class="block text-xs font-bold text-slate-600 mb-2">🔍 BUSCAR POR NOMBRE</label>
+                                <input 
+                                    type="text" 
+                                    id="offer-search-input" 
+                                    placeholder="Escribe nombre de comercializadora..."
+                                    class="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-drk-500 focus:outline-none text-sm"
+                                    onkeyup="filterAndSortOffers()"
+                                >
+                            </div>
+                            
+                            <!-- Ordenación -->
+                            <div class="md:w-64">
+                                <label class="block text-xs font-bold text-slate-600 mb-2">📊 ORDENAR POR</label>
+                                <select 
+                                    id="offer-sort-select" 
+                                    class="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-drk-500 focus:outline-none text-sm font-medium"
+                                    onchange="filterAndSortOffers()"
+                                >
+                                    <option value="savings_desc">💰 Mayor ahorro primero</option>
+                                    <option value="savings_asc">💸 Menor ahorro primero</option>
+                                    <option value="name_asc">🔤 Nombre (A-Z)</option>
+                                    <option value="name_desc">🔤 Nombre (Z-A)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Contador de resultados -->
+                        <div class="mt-3 flex items-center justify-between">
+                            <p class="text-xs text-slate-500">
+                                <span class="font-bold text-drk-600" id="offers-visible-count">0</span> de <span id="offers-total-count">0</span> ofertas
+                            </p>
+                            <button 
+                                onclick="clearOfferFilters()" 
+                                class="text-xs text-drk-600 hover:text-drk-800 font-bold hover:underline"
+                            >
+                                🔄 Limpiar filtros
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Lista de ofertas con radio buttons -->
+                    <div id="offers-radio-list" class="space-y-3 mb-6">
+                        <!-- Se rellenará dinámicamente -->
+                    </div>
+                    
+                    <!-- Mensaje cuando no hay resultados -->
+                    <div id="no-offers-message" class="hidden text-center py-8">
+                        <p class="text-slate-400 text-lg mb-2">🔍</p>
+                        <p class="text-slate-600 font-bold">No se encontraron ofertas</p>
+                        <p class="text-slate-500 text-sm">Prueba con otros criterios de búsqueda</p>
+                    </div>
+                </div>
+                
+                <!-- Footer con botones -->
+                <div class="p-6 border-t border-slate-200 flex-shrink-0">
+                    <div class="flex gap-3">
+                        <button onclick="closeOfferSelectionModal()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 rounded-xl transition">
+                            ← Volver
+                        </button>
+                        <button id="confirm-offer-selection-btn" class="flex-1 bg-drk-600 hover:bg-drk-700 text-white font-bold py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition" disabled>
+                            Generar Comparativa →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 10. Error/Message Modal -->
         <div id="error-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50 backdrop-blur-sm">
             <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full text-center">
@@ -638,6 +780,10 @@
         let comparisonMode = 'drk_prioritized';
         let activeBrand = BRANDS.DRK;
         let qrCodeInstance = null; // Instancia de QRCode.js
+        
+        // Nuevas variables para selección avanzada de ofertas
+        let availableOffers = []; // Array de todas las ofertas con ahorro positivo
+        let manuallySelectedOffer = null; // Oferta seleccionada manualmente
 
         // Estado Multicups
         let multiCupsData = [];
@@ -653,10 +799,10 @@
         const num = (n, d=2) => new Intl.NumberFormat('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n || 0);
         const numPriceFormula = (n) => new Intl.NumberFormat('es-ES', { minimumFractionDigits: 6, maximumFractionDigits: 6 }).format(n || 0);
 
-        // Función para obtener las ofertas GANADORAS (no necesariamente DRK) consolidadas por tipo.
+        // Función para obtener TODAS las ofertas únicas usadas en los resultados
         function getWinningOffersPerType(results) {
-            // Eliminamos la entrada '6.1TD' del objeto de resultados esperados
-            const winningOffers = { '2.0TD': null, '3.0TD': null };
+            // Cambio: Ahora guardamos arrays de ofertas únicas
+            const winningOffers = { '2.0TD': [], '3.0TD': [] };
             let hasDrkWinner = false;
             
             results.forEach(resItem => {
@@ -668,22 +814,34 @@
                     hasDrkWinner = true;
                 }
 
-                // Collect the winning offer for this type
+                // Collect ALL unique winning offers for this type
                 if (type === '2.0TD' || type === '3.0TD') {
-                    // Simplificamos la clave, ya no necesitamos la lógica para 6.1TD
-                    const key = type; 
+                    const key = type;
                     
-                    // We prioritize the lowest cost winner for the header, regardless of name, unless it's 'Tu Tarifa Actual'
-                    if (winnerOffer.name !== 'Tu Tarifa Actual' && (!winningOffers[key] || resItem.totalAnnual < winningOffers[key].totalAnnual)) {
-                        winningOffers[key] = {
-                            ...winnerOffer,
-                            totalAnnual: resItem.totalAnnual // Store the actual calculated annual cost
-                        };
+                    if (winnerOffer.name !== 'Tu Tarifa Actual') {
+                        // Crear un identificador único basado en los precios (no solo el nombre)
+                        // Esto permite diferenciar ofertas con el mismo nombre pero diferentes precios
+                        const offerSignature = type === '2.0TD' 
+                            ? `${winnerOffer.name}_${winnerOffer.p1_price}_${winnerOffer.p2_price}_${winnerOffer.p3_price}`
+                            : `${winnerOffer.name}_${winnerOffer.p1_price}_${winnerOffer.p2_price}_${winnerOffer.p3_price}_${winnerOffer.p4_price}`;
+                        
+                        // Verificar si esta oferta ya está (por firma única)
+                        const alreadyExists = winningOffers[key].some(o => {
+                            const existingSignature = type === '2.0TD'
+                                ? `${o.name}_${o.p1_price}_${o.p2_price}_${o.p3_price}`
+                                : `${o.name}_${o.p1_price}_${o.p2_price}_${o.p3_price}_${o.p4_price}`;
+                            return existingSignature === offerSignature;
+                        });
+                        
+                        if (!alreadyExists) {
+                            winningOffers[key].push({
+                                ...winnerOffer,
+                                totalAnnual: resItem.totalAnnual
+                            });
+                        }
                     }
                 }
             });
-            
-            // Ya no hay fallback para 6.1TD
 
             return { winningOffers, hasDrkWinner };
         }
@@ -1264,6 +1422,22 @@
                 console.log('Best overall:', bestOverall.offer.name, bestOverall.totalAnnual);
                 console.log('Best DRK:', bestDrk ? bestDrk.offer.name : 'None', bestDrk ? bestDrk.totalAnnual : 0);
                 
+                // --- GUARDAR OFERTAS CON AHORRO POSITIVO ---
+                availableOffers = results.filter(r => {
+                    r.savings = r.originalBillAnnual - r.totalAnnual;
+                    const hasPositiveSavings = r.savings > 0 && r.totalAnnual < r.originalBillAnnual;
+                    
+                    // Si modo es "DRK ÚNICAMENTE", filtrar solo ofertas DRK
+                    if (comparisonMode === 'drk_only') {
+                        return hasPositiveSavings && r.offer.isDrk;
+                    }
+                    
+                    // En otros modos, mostrar todas las ofertas con ahorro
+                    return hasPositiveSavings;
+                });
+                console.log('Available offers with savings (filtered by mode):', availableOffers.length);
+                console.log('Comparison mode:', comparisonMode);
+                
                 let final = bestOverall;
                 let brand = activeBrand;
 
@@ -1282,16 +1456,18 @@
                     // Modos DRK (drk_only, drk_prioritized)
                     if (comparisonMode === 'drk_only') {
                         final = bestDrk || bestOverall;
+                        // DRK ÚNICAMENTE: SIEMPRE mantener branding DRK (azul)
+                        brand = BRANDS.DRK;
                     } else if (comparisonMode === 'drk_prioritized') {
                         // Usar DRK si tiene ahorro, sino usar la mejor absoluta
                         final = (bestDrk && bestDrk.totalAnnual < bestDrk.originalBillAnnual) ? bestDrk : bestOverall;
-                    }
-
-                    // Aplicar branding según quién ganó
-                    if (final.savings > 0 && !final.offer.isDrk) {
-                        brand = BRANDS.POWER_CUP;
-                    } else {
-                        brand = BRANDS.DRK;
+                        
+                        // DRK PRIORITARIO: Solo cambiar a POWER_CUP si ganó una comercializadora NO-DRK
+                        if (final.offer.isDrk) {
+                            brand = BRANDS.DRK;
+                        } else {
+                            brand = BRANDS.POWER_CUP;
+                        }
                     }
                 }
                 
@@ -1327,6 +1503,26 @@
                     throw styleError;
                 }
                 
+                // Guardar el resultado temporalmente
+                lastComparisonResult = final;
+                lastComparisonResult.isMulti = false;
+                
+                console.log('Checking available offers...');
+                console.log('availableOffers.length:', availableOffers.length);
+                console.log('final.savings:', final.savings);
+                console.log('currentTariffType:', currentTariffType);
+                
+                // NUEVA LÓGICA: Si hay ofertas con ahorro, mostrar modal de decisión
+                // PERO SOLO en modo individual, NO en MultiCups
+                const isMultiCupsMode = currentTariffType === 'MULTICUPS';
+                
+                if (!isMultiCupsMode && availableOffers.length > 1) {
+                    console.log('Showing decision modal with', availableOffers.length, 'offers');
+                    showOfferDecisionModal();
+                    return; // No mostrar resultados todavía, esperar decisión del usuario
+                }
+                
+                // Si es MultiCups, solo hay 1 oferta, o ninguna, mostrar resultados directamente
                 console.log('About to render UI...');
                 renderResultsUI(final);
                 
@@ -1354,6 +1550,8 @@
             document.getElementById('landing-view').classList.add('hidden');
             document.getElementById('multicups-saga-view').classList.remove('hidden');
             document.getElementById('app-subtitle').textContent = TARIFF_CONFIG.MULTICUPS.label;
+            
+            // Mostrar sección de tipo de selección de oferta
 
             updateMultiCupsSagaView();
         }
@@ -1440,6 +1638,18 @@
         function compareMultiOffers() {
             if (multiCupsData.length === 0) return window.showErrorModal("No hay suministros para comparar.");
             
+            console.log('=== DIAGNÓSTICO AHORRO CONSOLIDADO ===');
+            console.log('Total CUPS:', multiCupsData.length);
+            
+            // Mostrar datos de cada CUPS antes de la suma
+            multiCupsData.forEach((cups, idx) => {
+                console.log(`CUPS ${idx + 1}:`, cups.cups);
+                console.log(`  - Original Annual: ${cups.originalBillAnnual}`);
+                console.log(`  - Total Annual: ${cups.totalAnnual}`);
+                console.log(`  - Savings: ${cups.savings}`);
+                console.log(`  - Diferencia calculada: ${cups.originalBillAnnual - cups.totalAnnual}`);
+            });
+            
             // 1. Acumular Totales y Consumos
             const total = multiCupsData.reduce((acc, current) => {
                 // current.totalAnnual ya contiene el costo de la tarifa "ganadora" (que puede ser la actual si no hay ahorro)
@@ -1492,6 +1702,11 @@
 
             // 2. Calcular Ahorro Final Consolidado
             total.savings = total.originalBillAnnual - total.totalAnnual;
+            
+            console.log('=== TOTALES ACUMULADOS ===');
+            console.log('Total originalBillAnnual:', total.originalBillAnnual);
+            console.log('Total totalAnnual:', total.totalAnnual);
+            console.log('Total savings calculado:', total.savings);
 
             // 3. Determinar la Oferta de Referencia para el resumen
             let bestOverallWinner = multiCupsData.reduce((best, current) => {
@@ -1775,66 +1990,77 @@
             const isPowerCupMode = comparisonMode === 'overall_best';
 
             // Determine the label for the price section
-            const priceSectionLabel = (isPowerCupMode && !hasDrkWinner) 
-                ? 'Precios de la Oferta Ganadora Consolidada (POWER CUP GLOBAL)' 
-                : 'Precios de la Oferta Consolidada';
+            let priceSectionLabel;
+            if (hasDrkWinner && comparisonMode !== 'overall_best') {
+                // Modo DRK con ofertas DRK
+                priceSectionLabel = 'Precios de las Ofertas Seleccionadas (DRK ENERGÍA)';
+            } else if (!hasDrkWinner && comparisonMode === 'overall_best') {
+                // Modo POWER CUP sin DRK
+                priceSectionLabel = 'Precios de las Ofertas Seleccionadas (POWER CUP GLOBAL)';
+            } else {
+                // Mixto o general
+                priceSectionLabel = 'Precios de las Ofertas Seleccionadas';
+            }
 
             const basePrefix = brand.NAME.includes('DRK') ? 'drk' : 'powercup';
             const color800 = brand.PRIMARY_TEXT.replace('text-', ''); // Get dynamic color: text-drk-800 -> drk-800
 
-            // Add 2.0TD Prices (P1-P2, E1-E3)
-            const offer20 = winningOffers['2.0TD'];
+            // Add 2.0TD Prices - TODAS las ofertas únicas
+            const offers20 = winningOffers['2.0TD'];
             const has20TD = individualResults.some(d => d.originalTariffType === '2.0TD');
-            if (offer20 && has20TD && offer20.name !== 'Tu Tarifa Actual') {
-                const fullTariffName20 = `${offer20.name || 'Tarifa 2.0TD'} - ${offer20.description || 'N/A'}`;
-                
-                const p1 = offer20.p_potencia_1 / 365;
-                const p2 = offer20.p_potencia_2 / 365;
-                const e1 = offer20.p1_price;
-                const e2 = offer20.p2_price;
-                const e3 = offer20.p3_price;
+            if (offers20 && offers20.length > 0 && has20TD) {
+                offers20.forEach((offer20, index) => {
+                    const fullTariffName20 = `${offer20.name || 'Tarifa 2.0TD'} - ${offer20.description || 'N/A'}`;
+                    
+                    const p1 = offer20.p_potencia_1 / 365;
+                    const p2 = offer20.p_potencia_2 / 365;
+                    const e1 = offer20.p1_price;
+                    const e2 = offer20.p2_price;
+                    const e3 = offer20.p3_price;
 
-                consolidatedPrices.push(`
-                    <div class="mb-4 p-3 bg-white rounded-lg border border-${basePrefix}-100">
-                        <h5 class="font-black text-sm text-${color800} border-b pb-1 mb-2">Tarifa 2.0 TD (Hogar/Negocio) - ${fullTariffName20}</h5>
-                        <div class="grid grid-cols-2 gap-x-4 text-xs">
-                            <p class="text-slate-500">P1 (€/kW/día):</p><p class="font-mono font-bold text-right">${numPriceFormula(p1)}</p>
-                            <p class="text-slate-500">P2 (€/kW/día):</p><p class="font-mono font-bold text-right">${numPriceFormula(p2)}</p>
-                            <p class="text-slate-500 mt-2 col-span-2 font-bold text-cta-green-600">ENERGÍA (€/kWh)</p>
-                            <p class="text-slate-500">E1 (Punta):</p><p class="font-mono font-bold text-right">${numPriceFormula(e1)}</p>
-                            <p class="text-slate-500">E2 (Llano):</p><p class="font-mono font-bold text-right">${numPriceFormula(e2)}</p>
-                            <p class="text-slate-500">E3 (Valle):</p><p class="font-mono font-bold text-right">${numPriceFormula(e3)}</p>
+                    consolidatedPrices.push(`
+                        <div class="mb-4 p-3 bg-white rounded-lg border border-${basePrefix}-100">
+                            <h5 class="font-black text-sm text-${color800} border-b pb-1 mb-2">Tarifa 2.0 TD #${index + 1} - ${fullTariffName20}</h5>
+                            <div class="grid grid-cols-2 gap-x-4 text-xs">
+                                <p class="text-slate-500">P1 (€/kW/día):</p><p class="font-mono font-bold text-right">${numPriceFormula(p1)}</p>
+                                <p class="text-slate-500">P2 (€/kW/día):</p><p class="font-mono font-bold text-right">${numPriceFormula(p2)}</p>
+                                <p class="text-slate-500 mt-2 col-span-2 font-bold text-cta-green-600">ENERGÍA (€/kWh)</p>
+                                <p class="text-slate-500">E1 (Punta):</p><p class="font-mono font-bold text-right">${numPriceFormula(e1)}</p>
+                                <p class="text-slate-500">E2 (Llano):</p><p class="font-mono font-bold text-right">${numPriceFormula(e2)}</p>
+                                <p class="text-slate-500">E3 (Valle):</p><p class="font-mono font-bold text-right">${numPriceFormula(e3)}</p>
+                            </div>
                         </div>
-                    </div>
-                `);
+                    `);
+                });
             }
 
-            // Add 3.0TD Prices (P1-P6, E1-E6)
-            const offer30 = winningOffers['3.0TD'];
+            // Add 3.0TD Prices - TODAS las ofertas únicas
+            const offers30 = winningOffers['3.0TD'];
             const has30TD = individualResults.some(d => d.originalTariffType === '3.0TD');
-            if (offer30 && has30TD && offer30.name !== 'Tu Tarifa Actual') {
-                let pRows = '';
-                for(let i=1; i<=6; i++) {
-                    pRows += `<p class="text-slate-500">P${i}:</p><p class="font-mono font-bold text-right">${numPriceFormula(offer30[`p_potencia_${i}`] / 365)}</p>`;
-                }
-                let eRows = '';
-                for(let i=1; i<=6; i++) {
-                    eRows += `<p class="text-slate-500">E${i}:</p><p class="font-mono font-bold text-right">${numPriceFormula(offer30[`p${i}_price`])}</p>`;
-                }
-                // Eliminamos la referencia a 6.1TD en el nombre
-                const fullTariffName30 = `${offer30.name || 'Tarifa 3.0TD'} - ${offer30.description || 'N/A'}`;
+            if (offers30 && offers30.length > 0 && has30TD) {
+                offers30.forEach((offer30, index) => {
+                    let pRows = '';
+                    for(let i=1; i<=6; i++) {
+                        pRows += `<p class="text-slate-500">P${i}:</p><p class="font-mono font-bold text-right">${numPriceFormula(offer30[`p_potencia_${i}`] / 365)}</p>`;
+                    }
+                    let eRows = '';
+                    for(let i=1; i<=6; i++) {
+                        eRows += `<p class="text-slate-500">E${i}:</p><p class="font-mono font-bold text-right">${numPriceFormula(offer30[`p${i}_price`])}</p>`;
+                    }
+                    const fullTariffName30 = `${offer30.name || 'Tarifa 3.0TD'} - ${offer30.description || 'N/A'}`;
 
-                consolidatedPrices.push(`
-                    <div class="mb-4 p-3 bg-white rounded-lg border border-${basePrefix}-100">
-                        <h5 class="font-black text-sm text-${color800} border-b pb-1 mb-2">Tarifa 3.0 TD (Industria/Gran Consumo) - ${fullTariffName30}</h5>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-4 text-xs">
-                            <div class="col-span-2 md:col-span-4 font-bold text-cta-red-500 mb-1">POTENCIA (€/kW/día)</div>
-                            ${pRows}
-                            <div class="col-span-2 md:col-span-4 font-bold text-cta-green-600 mt-2 mb-1 border-t pt-2">ENERGÍA (€/kWh)</div>
-                            ${eRows}
+                    consolidatedPrices.push(`
+                        <div class="mb-4 p-3 bg-white rounded-lg border border-${basePrefix}-100">
+                            <h5 class="font-black text-sm text-${color800} border-b pb-1 mb-2">Tarifa 3.0 TD #${index + 1} - ${fullTariffName30}</h5>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-x-4 text-xs">
+                                <div class="col-span-2 md:col-span-4 font-bold text-cta-red-500 mb-1">POTENCIA (€/kW/día)</div>
+                                ${pRows}
+                                <div class="col-span-2 md:col-span-4 font-bold text-cta-green-600 mt-2 mb-1 border-t pt-2">ENERGÍA (€/kWh)</div>
+                                ${eRows}
+                            </div>
                         </div>
-                    </div>
-                `);
+                    `);
+                });
             }
 
             if (consolidatedPrices.length > 0) {
@@ -2797,61 +3023,70 @@
             // --- Precios de la Oferta Consolidada (Dynamic Winner) ---
             
             let preciosConsolidadosHTML = '';
-            const priceSectionHeader = dynamicBrand.NAME.includes('DRK')
-                ? 'PRECIOS DE LA OFERTA CONSOLIDADA (DRK ENERGÍA)'
-                : 'PRECIOS DE LA OFERTA GANADORA CONSOLIDADA (POWER CUP GLOBAL)';
-
-            // 2.0TD Prices
-            const offer20 = winningOffers['2.0TD'];
-            const has20TD = individualResults.some(d => d.originalTariffType === '2.0TD');
-            if (offer20 && has20TD && offer20.name !== 'Tu Tarifa Actual') {
-                const fullTariffName20 = `${offer20.name || 'Tarifa 2.0TD'} - ${offer20.description || 'N/A'}`; 
-                const p1 = offer20.p_potencia_1 / 365;
-                const p2 = offer20.p_potencia_2 / 365;
-                const e1 = offer20.p1_price;
-                const e2 = offer20.p2_price;
-                const e3 = offer20.p3_price;
-                
-                preciosConsolidadosHTML += `
-                    <div style="margin-top: 15px; padding: 10px; background-color: #ffffff; border: 1px solid #ddd; border-radius: 6px;">
-                        <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 13px; color: ${D_PRIMARY_DARK};">Tarifa 2.0 TD (Hogar/Negocio) - ${fullTariffName20}</p>
-                        <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; font-size: 11px; table-layout: fixed;">
-                            <tr><td style="padding: 2px 0; width: 60%; color: #555;">P1 (€/kW/día):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: #333;">${numPriceFormula(p1)}</td></tr>
-                            <tr><td style="padding: 2px 0; color: #555;">P2 (€/kW/día):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: #333;">${numPriceFormula(p2)}</td></tr>
-                            <tr style="height: 5px;"><td colspan="2"></td></tr>
-                            <tr><td style="padding: 2px 0; font-weight: bold; color: ${GREEN_SAVE};">ENERGÍA E1 (Punta - €/kWh):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: ${GREEN_SAVE};">${numPriceFormula(e1)}</td></tr>
-                            <tr><td style="padding: 2px 0; font-weight: bold; color: ${GREEN_SAVE};">ENERGÍA E2 (Llano - €/kWh):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: ${GREEN_SAVE};">${numPriceFormula(e2)}</td></tr>
-                            <tr><td style="padding: 2px 0; font-weight: bold; color: ${GREEN_SAVE};">ENERGÍA E3 (Valle - €/kWh):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: ${GREEN_SAVE};">${numPriceFormula(e3)}</td></tr>
-                        </table>
-                    </div>
-                `;
+            let priceSectionHeader;
+            if (hasDrkWinner && comparisonMode !== 'overall_best') {
+                priceSectionHeader = 'PRECIOS DE LAS OFERTAS SELECCIONADAS (DRK ENERGÍA)';
+            } else if (!hasDrkWinner && comparisonMode === 'overall_best') {
+                priceSectionHeader = 'PRECIOS DE LAS OFERTAS SELECCIONADAS (POWER CUP GLOBAL)';
+            } else {
+                priceSectionHeader = 'PRECIOS DE LAS OFERTAS SELECCIONADAS';
             }
 
-            // 3.0TD Prices (P1-P6, E1-E6)
-            const offer30 = winningOffers['3.0TD'];
-            const has30TD = individualResults.some(d => d.originalTariffType === '3.0TD'); // Solo miramos 3.0TD
-            if (offer30 && has30TD && offer30.name !== 'Tu Tarifa Actual') {
-                let pRows = '';
-                for(let i=1; i<=6; i++) {
-                    pRows += `<tr><td style="padding: 2px 0; color: #555;">P${i} (€/kW/día):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: #333;">${numPriceFormula(offer30[`p_potencia_${i}`] / 365)}</td></tr>`;
-                }
-                let eRows = '';
-                for(let i=1; i<=6; i++) {
-                    eRows += `<tr><td style="padding: 2px 0; font-weight: bold; color: ${GREEN_SAVE};">E${i} (€/kWh):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: ${GREEN_SAVE};">${numPriceFormula(offer30[`p${i}_price`])}</p></td></tr>`;
-                }
-                const fullTariffName30 = `${offer30.name || 'Tarifa 3.0TD'} - ${offer30.description || 'N/A'}`; // Quitamos 6.1TD del título
+            // 2.0TD Prices - TODAS las ofertas únicas
+            const offers20 = winningOffers['2.0TD'];
+            const has20TD = individualResults.some(d => d.originalTariffType === '2.0TD');
+            if (offers20 && offers20.length > 0 && has20TD) {
+                offers20.forEach((offer20, index) => {
+                    const fullTariffName20 = `${offer20.name || 'Tarifa 2.0TD'} - ${offer20.description || 'N/A'}`; 
+                    const p1 = offer20.p_potencia_1 / 365;
+                    const p2 = offer20.p_potencia_2 / 365;
+                    const e1 = offer20.p1_price;
+                    const e2 = offer20.p2_price;
+                    const e3 = offer20.p3_price;
+                    
+                    preciosConsolidadosHTML += `
+                        <div style="margin-top: 15px; padding: 10px; background-color: #ffffff; border: 1px solid #ddd; border-radius: 6px;">
+                            <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 13px; color: ${D_PRIMARY_DARK};">Tarifa 2.0 TD #${index + 1} - ${fullTariffName20}</p>
+                            <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; font-size: 11px; table-layout: fixed;">
+                                <tr><td style="padding: 2px 0; width: 60%; color: #555;">P1 (€/kW/día):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: #333;">${numPriceFormula(p1)}</td></tr>
+                                <tr><td style="padding: 2px 0; color: #555;">P2 (€/kW/día):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: #333;">${numPriceFormula(p2)}</td></tr>
+                                <tr style="height: 5px;"><td colspan="2"></td></tr>
+                                <tr><td style="padding: 2px 0; font-weight: bold; color: ${GREEN_SAVE};">ENERGÍA E1 (Punta - €/kWh):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: ${GREEN_SAVE};">${numPriceFormula(e1)}</td></tr>
+                                <tr><td style="padding: 2px 0; font-weight: bold; color: ${GREEN_SAVE};">ENERGÍA E2 (Llano - €/kWh):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: ${GREEN_SAVE};">${numPriceFormula(e2)}</td></tr>
+                                <tr><td style="padding: 2px 0; font-weight: bold; color: ${GREEN_SAVE};">ENERGÍA E3 (Valle - €/kWh):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: ${GREEN_SAVE};">${numPriceFormula(e3)}</td></tr>
+                            </table>
+                        </div>
+                    `;
+                });
+            }
 
-                preciosConsolidadosHTML += `
-                    <div style="margin-top: 15px; padding: 10px; background-color: #ffffff; border: 1px solid #ddd; border-radius: 6px;">
-                        <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 13px; color: ${D_PRIMARY_DARK};">Tarifa 3.0 TD (Industria/Gran Consumo) - ${fullTariffName30}</p>
-                        <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; font-size: 11px; table-layout: fixed;">
-                            <tr><td colspan="2" style="font-weight: bold; color: ${RED_CTA}; padding: 5px 0 2px 0;">POTENCIA</td></tr>
-                            ${pRows}
-                            <tr><td colspan="2" style="font-weight: bold; color: ${GREEN_SAVE}; padding: 5px 0 2px 0; border-top: 1px dashed #ccc; margin-top: 5px;">ENERGÍA</td></tr>
-                            ${eRows}
-                        </table>
-                    </div>
-                `;
+            // 3.0TD Prices - TODAS las ofertas únicas  
+            const offers30 = winningOffers['3.0TD'];
+            const has30TD = individualResults.some(d => d.originalTariffType === '3.0TD');
+            if (offers30 && offers30.length > 0 && has30TD) {
+                offers30.forEach((offer30, index) => {
+                    let pRows = '';
+                    for(let i=1; i<=6; i++) {
+                        pRows += `<tr><td style="padding: 2px 0; color: #555;">P${i} (€/kW/día):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: #333;">${numPriceFormula(offer30[`p_potencia_${i}`] / 365)}</td></tr>`;
+                    }
+                    let eRows = '';
+                    for(let i=1; i<=6; i++) {
+                        eRows += `<tr><td style="padding: 2px 0; font-weight: bold; color: ${GREEN_SAVE};">E${i} (€/kWh):</td><td style="text-align: right; font-weight: bold; font-family: monospace; color: ${GREEN_SAVE};">${numPriceFormula(offer30[`p${i}_price`])}</p></td></tr>`;
+                    }
+                    const fullTariffName30 = `${offer30.name || 'Tarifa 3.0TD'} - ${offer30.description || 'N/A'}`;
+
+                    preciosConsolidadosHTML += `
+                        <div style="margin-top: 15px; padding: 10px; background-color: #ffffff; border: 1px solid #ddd; border-radius: 6px;">
+                            <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 13px; color: ${D_PRIMARY_DARK};">Tarifa 3.0 TD #${index + 1} - ${fullTariffName30}</p>
+                            <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; font-size: 11px; table-layout: fixed;">
+                                <tr><td colspan="2" style="font-weight: bold; color: ${RED_CTA}; padding: 5px 0 2px 0;">POTENCIA</td></tr>
+                                ${pRows}
+                                <tr><td colspan="2" style="font-weight: bold; color: ${GREEN_SAVE}; padding: 5px 0 2px 0; border-top: 1px dashed #ccc; margin-top: 5px;">ENERGÍA</td></tr>
+                                ${eRows}
+                            </table>
+                        </div>
+                    `;
+                });
             }
             
             const preciosResumenSection = preciosConsolidadosHTML ? `
@@ -3098,6 +3333,513 @@
             });
         }
         
+        // --- NUEVA FUNCIONALIDAD: Tipo de Selección de Oferta ---
+        
+        function updateOfferSelectionType(newType) {
+            offerSelectionType = newType;
+            
+            // Actualizar estilos de los botones de tipo de selección
+            document.querySelectorAll('input[name="offer_selection_type"]').forEach(r => {
+                const container = r.closest('.offer-type-selector').querySelector('div');
+                const isSelected = r.value === newType;
+                
+                if (isSelected) {
+                    container.className = 'flex items-start gap-3 p-4 rounded-xl border-2 border-drk-500 bg-drk-500 text-white transition hover:bg-drk-600';
+                } else {
+                    container.className = 'flex items-start gap-3 p-4 rounded-xl border-2 border-slate-300 bg-white text-slate-700 transition hover:bg-slate-50 hover:border-drk-400';
+                }
+            });
+        }
+        
+        // --- NUEVO: Modal de Decisión (Mejor vs Elegir) ---
+        
+        function showOfferDecisionModal() {
+            document.getElementById('loading-status').classList.add('hidden');
+            document.getElementById('offer-decision-modal').classList.remove('hidden');
+            document.getElementById('offer-decision-modal').classList.add('flex');
+        }
+        
+        function closeOfferDecisionModal() {
+            document.getElementById('offer-decision-modal').classList.add('hidden');
+            document.getElementById('offer-decision-modal').classList.remove('flex');
+        }
+        
+        function selectBestOptionDirect() {
+            // Cerrar modal de decisión
+            closeOfferDecisionModal();
+            
+            // Usar el resultado que ya estaba calculado (lastComparisonResult)
+            if (!lastComparisonResult) {
+                window.showErrorModal('No hay resultado disponible');
+                return;
+            }
+            
+            // Verificar si estamos en contexto MultiCups
+            if (lastComparisonResult._multiCupsContext) {
+                // Contexto MultiCups: Añadir a la lista
+                addSupplyToMultiCupsList(lastComparisonResult);
+            } else {
+                // Contexto individual: Mostrar resultados
+                renderResultsUI(lastComparisonResult);
+                document.getElementById('initial-view').classList.add('hidden');
+                document.getElementById('scanner-view').classList.add('hidden');
+                document.getElementById('results-view').classList.remove('hidden');
+                document.getElementById('results-view').classList.add('animate-fade-in-up');
+            }
+        }
+        
+        function selectFromResults() {
+            // Cerrar modal de decisión
+            closeOfferDecisionModal();
+            
+            // Mostrar modal de selección de ofertas
+            if (lastComparisonResult && availableOffers.length > 0) {
+                showOfferSelectionModal(lastComparisonResult.cups);
+            } else {
+                window.showErrorModal('No hay ofertas disponibles para seleccionar');
+            }
+        }
+        
+        // NUEVA: Función para recalcular energyCosts y powerCosts correctamente
+        function recalculateCostsForOffer(baseData, selectedOffer) {
+            const tariffType = baseData.originalTariffType;
+            const recalculatedEnergyCosts = [];
+            const recalculatedPowerCosts = [];
+            
+            console.log('=== RECALCULATE COSTS DEBUG ===');
+            console.log('Tariff type:', tariffType);
+            console.log('BaseData keys:', Object.keys(baseData));
+            console.log('SelectedOffer keys:', Object.keys(selectedOffer));
+            
+            if (tariffType === '2.0TD') {
+                // Calcular energía para 2.0TD (3 periodos)
+                const consumos = [
+                    baseData.consumo_punta || 0,
+                    baseData.consumo_llano || 0,
+                    baseData.consumo_valle || 0
+                ];
+                const preciosEnergia = [
+                    selectedOffer.p1_price || 0,
+                    selectedOffer.p2_price || 0,
+                    selectedOffer.p3_price || 0
+                ];
+                
+                console.log('2.0TD Consumos:', consumos);
+                console.log('2.0TD Precios:', preciosEnergia);
+                
+                for (let i = 0; i < 3; i++) {
+                    recalculatedEnergyCosts.push({
+                        period: i + 1,
+                        kwh: consumos[i],
+                        price: preciosEnergia[i],
+                        cost: consumos[i] * preciosEnergia[i]
+                    });
+                }
+                
+                // Calcular potencia para 2.0TD (2 periodos)
+                const potencias = [
+                    baseData.potencia_p1_kw || 0,
+                    baseData.potencia_p2_kw || 0
+                ];
+                const preciosPotencia = [
+                    (selectedOffer.p_potencia_1 || 0) / 365,
+                    (selectedOffer.p_potencia_2 || 0) / 365
+                ];
+                const diasFacturados = baseData.dias_facturados || 30;
+                
+                for (let i = 0; i < 2; i++) {
+                    recalculatedPowerCosts.push({
+                        period: i + 1,
+                        kw: potencias[i],
+                        priceDay: preciosPotencia[i],
+                        cost: potencias[i] * preciosPotencia[i] * diasFacturados
+                    });
+                }
+            } else if (tariffType === '3.0TD') {
+                console.log('=== 3.0TD DETAILED DEBUG ===');
+                
+                // IMPORTANTE: Algunas tarifas 3.0TD solo tienen 3 precios definidos
+                // Necesitamos propagar los precios existentes a los 6 periodos
+                
+                // Detectar si la tarifa tiene 6 precios o solo 3
+                const hasFull6Periods = selectedOffer.p4_price !== undefined && selectedOffer.p4_price > 0;
+                
+                let prices = [];
+                if (hasFull6Periods) {
+                    // Tarifa con 6 periodos completos
+                    prices = [
+                        selectedOffer.p1_price || 0,
+                        selectedOffer.p2_price || 0,
+                        selectedOffer.p3_price || 0,
+                        selectedOffer.p4_price || 0,
+                        selectedOffer.p5_price || 0,
+                        selectedOffer.p6_price || 0
+                    ];
+                } else {
+                    // Tarifa con solo 3 precios: propagar P1->P1/P4, P2->P2/P5, P3->P3/P6
+                    const p1 = selectedOffer.p1_price || 0;
+                    const p2 = selectedOffer.p2_price || 0;
+                    const p3 = selectedOffer.p3_price || 0;
+                    prices = [p1, p2, p3, p1, p2, p3];  // Duplicar los 3 primeros
+                    console.log('3.0TD tariff has only 3 periods, propagating prices:', prices);
+                }
+                
+                // Detectar si la tarifa tiene 6 precios de potencia o solo 2
+                const hasFull6PowerPrices = selectedOffer.p_potencia_3 !== undefined && selectedOffer.p_potencia_3 > 0;
+                
+                let powerPrices = [];
+                if (hasFull6PowerPrices) {
+                    powerPrices = [
+                        (selectedOffer.p_potencia_1 || 0) / 365,
+                        (selectedOffer.p_potencia_2 || 0) / 365,
+                        (selectedOffer.p_potencia_3 || 0) / 365,
+                        (selectedOffer.p_potencia_4 || 0) / 365,
+                        (selectedOffer.p_potencia_5 || 0) / 365,
+                        (selectedOffer.p_potencia_6 || 0) / 365
+                    ];
+                } else {
+                    // Solo tiene P1 y P2: propagar P1->P1/P3/P5, P2->P2/P4/P6
+                    const p1 = (selectedOffer.p_potencia_1 || 0) / 365;
+                    const p2 = (selectedOffer.p_potencia_2 || 0) / 365;
+                    powerPrices = [p1, p2, p1, p2, p1, p2];
+                    console.log('3.0TD tariff has only 2 power prices, propagating:', powerPrices);
+                }
+                
+                // Calcular energía para 3.0TD (6 periodos)
+                for (let i = 1; i <= 6; i++) {
+                    const kwh = baseData[`consumo_p${i}`] || 0;
+                    const price = prices[i - 1];
+                    console.log(`Period ${i}: kwh=${kwh}, price=${price}`);
+                    recalculatedEnergyCosts.push({
+                        period: i,
+                        kwh: kwh,
+                        price: price,
+                        cost: kwh * price
+                    });
+                }
+                
+                // Calcular potencia para 3.0TD (6 periodos)
+                const diasFacturados = baseData.dias_facturados || 30;
+                console.log('Días facturados:', diasFacturados);
+                
+                for (let i = 1; i <= 6; i++) {
+                    const kw = baseData[`potencia_p${i}_kw`] || 0;
+                    const priceDay = powerPrices[i - 1];
+                    console.log(`Power P${i}: kw=${kw}, priceDay=${priceDay}`);
+                    recalculatedPowerCosts.push({
+                        period: i,
+                        kw: kw,
+                        priceDay: priceDay,
+                        cost: kw * priceDay * diasFacturados
+                    });
+                }
+            }
+            
+            console.log('Recalculated energy costs periods:', recalculatedEnergyCosts.length);
+            console.log('Recalculated power costs periods:', recalculatedPowerCosts.length);
+            
+            // Calcular subtotales
+            const subPower = recalculatedPowerCosts.reduce((sum, p) => sum + p.cost, 0);
+            const subEnergyNet = recalculatedEnergyCosts.reduce((sum, e) => sum + e.cost, 0);
+            
+            console.log('Recalculated subPower:', subPower);
+            console.log('Recalculated subEnergyNet:', subEnergyNet);
+            console.log('=== END RECALCULATE DEBUG ===');
+            
+            return {
+                energyCosts: recalculatedEnergyCosts,
+                powerCosts: recalculatedPowerCosts,
+                subPower: subPower,
+                subEnergyNet: subEnergyNet
+            };
+        }
+        
+        // Nueva función para añadir suministro a MultiCups después de elegir
+        function addSupplyToMultiCupsList(result) {
+            console.log('addSupplyToMultiCupsList called with result:', result);
+            console.log('Result offer:', result.offer);
+            console.log('Result originalTariffType:', result.originalTariffType);
+            
+            // Asegurar que el originalTariffType esté presente
+            if (!result.originalTariffType && result._multiCupsContext) {
+                result.originalTariffType = result._multiCupsContext.tariffType;
+                console.log('Set originalTariffType from context:', result.originalTariffType);
+            }
+            
+            // IMPORTANTE: Recalcular costes para asegurar que 3.0TD tenga 6 periodos
+            if (result.offer && result.originalTariffType) {
+                const recalculated = recalculateCostsForOffer(result, result.offer);
+                result.energyCosts = recalculated.energyCosts;
+                result.powerCosts = recalculated.powerCosts;
+                result.subPower = recalculated.subPower;
+                result.subEnergyNet = recalculated.subEnergyNet;
+                console.log('Costs recalculated for', result.originalTariffType);
+                console.log('New subPower:', result.subPower, 'New subEnergyNet:', result.subEnergyNet);
+            }
+            
+            // Limpiar el contexto temporal
+            delete result._multiCupsContext;
+            
+            // Añadir a la lista
+            multiCupsData.push(result);
+            console.log('multiCupsData after push:', multiCupsData);
+            
+            // Actualizar UI y volver a la vista SAGA
+            document.getElementById('tariff-display-badge').textContent = multiCupsData.length;
+            
+            window.showMessageModal(`Suministro ${result.cups} (${result.offer.name}) añadido. Total: ${multiCupsData.length}`, "Suministro Añadido");
+            
+            document.getElementById('initial-view').classList.add('hidden');
+            showMultiCupsSagaView();
+        }
+        
+        // Funciones para el modal de selección de ofertas
+        function showOfferSelectionModal(cups) {
+            // Mostrar CUPS en el modal
+            document.getElementById('modal-selection-cups').textContent = cups;
+            
+            // Inicializar contadores y limpiar filtros
+            document.getElementById('offers-total-count').textContent = availableOffers.length;
+            document.getElementById('offers-visible-count').textContent = availableOffers.length;
+            document.getElementById('offer-search-input').value = '';
+            document.getElementById('offer-sort-select').value = 'savings_desc';
+            
+            // Renderizar ofertas
+            renderOffersList();
+            
+            // Mostrar modal
+            document.getElementById('offer-selection-modal').classList.remove('hidden');
+            document.getElementById('offer-selection-modal').classList.add('flex');
+            
+            // Deshabilitar botón de confirmar inicialmente
+            document.getElementById('confirm-offer-selection-btn').disabled = true;
+            manuallySelectedOffer = null;
+        }
+        
+        // NUEVA: Función para renderizar la lista de ofertas
+        function renderOffersList() {
+            const searchTerm = document.getElementById('offer-search-input').value.toLowerCase();
+            const sortBy = document.getElementById('offer-sort-select').value;
+            
+            const container = document.getElementById('offers-radio-list');
+            const noResultsMsg = document.getElementById('no-offers-message');
+            
+            // Filtrar ofertas
+            let filteredOffers = availableOffers.map((offer, originalIndex) => ({
+                offer: offer,
+                originalIndex: originalIndex
+            })).filter(item => {
+                if (searchTerm === '') return true;
+                
+                const offerName = item.offer.offer.name.toLowerCase();
+                const commercializer = item.offer.offer.isDrk ? 'drk energía' : (item.offer.offer.commercializer || '').toLowerCase();
+                const description = (item.offer.offer.description || '').toLowerCase();
+                
+                return offerName.includes(searchTerm) || 
+                       commercializer.includes(searchTerm) || 
+                       description.includes(searchTerm);
+            });
+            
+            // Ordenar ofertas filtradas
+            filteredOffers.sort((a, b) => {
+                switch(sortBy) {
+                    case 'savings_desc':
+                        return b.offer.savings - a.offer.savings;
+                    case 'savings_asc':
+                        return a.offer.savings - b.offer.savings;
+                    case 'name_asc':
+                        return a.offer.offer.name.localeCompare(b.offer.offer.name);
+                    case 'name_desc':
+                        return b.offer.offer.name.localeCompare(a.offer.offer.name);
+                    default:
+                        return 0;
+                }
+            });
+            
+            // Actualizar contador
+            document.getElementById('offers-visible-count').textContent = filteredOffers.length;
+            
+            // Limpiar contenedor
+            container.innerHTML = '';
+            
+            // Mostrar/ocultar mensaje de "no hay resultados"
+            if (filteredOffers.length === 0) {
+                noResultsMsg.classList.remove('hidden');
+                container.classList.add('hidden');
+                return;
+            } else {
+                noResultsMsg.classList.add('hidden');
+                container.classList.remove('hidden');
+            }
+            
+            // Renderizar ofertas
+            const eur = (n) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n || 0);
+            
+            filteredOffers.forEach(item => {
+                const offer = item.offer;
+                const originalIndex = item.originalIndex;
+                const commercializer = offer.offer.isDrk ? 'DRK Energía' : (offer.offer.commercializer || 'Otra comercializadora');
+                const description = offer.offer.description || '';
+                
+                const offerCard = document.createElement('label');
+                offerCard.className = 'offer-radio-card block cursor-pointer';
+                offerCard.innerHTML = `
+                    <input type="radio" name="selected_offer" value="${originalIndex}" class="hidden">
+                    <div class="offer-card-content flex items-start gap-4 p-4 rounded-xl border-2 border-slate-300 bg-white transition hover:border-drk-400 hover:bg-drk-50">
+                        <svg class="w-5 h-5 mt-0.5 flex-shrink-0 text-slate-400 checkmark-offer hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div class="flex-1">
+                            <p class="font-bold text-base text-slate-900">${offer.offer.name}</p>
+                            <p class="text-sm text-slate-600">${commercializer}${description ? ' - ' + description : ''}</p>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                            <p class="text-xs text-slate-500">Ahorro anual</p>
+                            <p class="text-xl font-black text-green-600">${eur(offer.savings)}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(offerCard);
+            });
+            
+            // Añadir event listeners a los radio buttons
+            document.querySelectorAll('input[name="selected_offer"]').forEach(radio => {
+                radio.addEventListener('change', handleOfferRadioChange);
+            });
+        }
+        
+        // NUEVAS FUNCIONES: Filtrado y ordenación de ofertas
+        function filterAndSortOffers() {
+            renderOffersList();
+        }
+        
+        function clearOfferFilters() {
+            document.getElementById('offer-search-input').value = '';
+            document.getElementById('offer-sort-select').value = 'savings_desc';
+            renderOffersList();
+        }
+        
+        function handleOfferRadioChange(e) {
+            const selectedIndex = parseInt(e.target.value);
+            manuallySelectedOffer = availableOffers[selectedIndex];
+            
+            // Actualizar estilos visuales
+            document.querySelectorAll('.offer-radio-card').forEach((card, idx) => {
+                const content = card.querySelector('.offer-card-content');
+                const check = card.querySelector('.checkmark-offer');
+                
+                if (idx === selectedIndex) {
+                    content.className = 'offer-card-content flex items-start gap-4 p-4 rounded-xl border-2 border-drk-500 bg-drk-50 transition';
+                    check.classList.remove('hidden');
+                    check.classList.add('text-drk-600');
+                } else {
+                    content.className = 'offer-card-content flex items-start gap-4 p-4 rounded-xl border-2 border-slate-300 bg-white transition hover:border-drk-400 hover:bg-drk-50';
+                    check.classList.add('hidden');
+                }
+            });
+            
+            // Habilitar botón de confirmar
+            document.getElementById('confirm-offer-selection-btn').disabled = false;
+        }
+        
+        function closeOfferSelectionModal() {
+            document.getElementById('offer-selection-modal').classList.add('hidden');
+            document.getElementById('offer-selection-modal').classList.remove('flex');
+            // NO limpiar manuallySelectedOffer aquí, se limpiará después de usarlo
+        }
+        
+        function confirmOfferSelection() {
+            if (!manuallySelectedOffer) return;
+            
+            // Cerrar modal
+            document.getElementById('offer-selection-modal').classList.add('hidden');
+            document.getElementById('offer-selection-modal').classList.remove('flex');
+            
+            // Continuar con el flujo normal mostrando el resultado
+            continueWithSelectedOffer();
+        }
+        
+        function continueWithSelectedOffer() {
+            console.log('continueWithSelectedOffer called');
+            console.log('manuallySelectedOffer:', manuallySelectedOffer);
+            console.log('lastComparisonResult:', lastComparisonResult);
+            
+            // Usar la oferta seleccionada manualmente
+            let result = manuallySelectedOffer;
+            
+            if (!result) {
+                console.error('No result available!');
+                return;
+            }
+            
+            console.log('Result offer:', result.offer.name);
+            
+            // Verificar si estamos en contexto MultiCups
+            const isMultiCupsContext = lastComparisonResult && lastComparisonResult._multiCupsContext;
+            
+            if (isMultiCupsContext) {
+                // Contexto MultiCups: Necesitamos TODOS los datos de lastComparisonResult
+                // pero con la OFERTA seleccionada manualmente
+                console.log('MultiCups context detected');
+                
+                // Usar la función centralizada para recalcular costes
+                const recalculated = recalculateCostsForOffer(lastComparisonResult, result.offer);
+                
+                // Crear un nuevo objeto combinando lastComparisonResult (datos base) 
+                // con la oferta elegida manualmente y los costes recalculados
+                const combinedResult = {
+                    ...lastComparisonResult,  // Todos los datos base (CUPS, consumos, potencias, etc.)
+                    offer: result.offer,      // La oferta elegida manualmente
+                    totalAnnual: result.totalAnnual,  // Coste anual de la oferta elegida
+                    totalPeriod: result.totalPeriod,  // Coste periodo de la oferta elegida
+                    savings: result.savings,          // Ahorro de la oferta elegida
+                    energyCosts: recalculated.energyCosts,  // Desglose RECALCULADO de energía
+                    powerCosts: recalculated.powerCosts,    // Desglose RECALCULADO de potencia
+                    subPower: recalculated.subPower,        // Subtotal RECALCULADO de potencia
+                    subEnergyNet: recalculated.subEnergyNet, // Subtotal RECALCULADO de energía
+                    isNegativeSavings: result.isNegativeSavings || false
+                };
+                
+                console.log('Combined result with recalculated costs:', combinedResult);
+                console.log('Energy costs periods:', combinedResult.energyCosts.length);
+                console.log('Power costs periods:', combinedResult.powerCosts.length);
+                
+                addSupplyToMultiCupsList(combinedResult);
+            } else {
+                // Contexto individual: Mostrar resultados
+                console.log('Individual context, showing results');
+                
+                // Aplicar branding
+                let brand = result.offer.isDrk ? BRANDS.DRK : BRANDS.POWER_CUP;
+                console.log('Applying brand:', brand.NAME);
+                applyBrandStyles(brand);
+                activeBrand = brand;
+                
+                // Asignar como resultado final
+                lastComparisonResult = result;
+                lastComparisonResult.isMulti = false;
+                
+                console.log('About to render results UI');
+                // Mostrar resultados
+                renderResultsUI(result);
+                
+                console.log('Hiding initial-view and showing results-view');
+                document.getElementById('loading-status').classList.add('hidden');
+                document.getElementById('initial-view').classList.add('hidden');
+                document.getElementById('scanner-view').classList.add('hidden');
+                document.getElementById('results-view').classList.remove('hidden');
+                document.getElementById('results-view').classList.add('animate-fade-in-up');
+                
+                console.log('Done showing results');
+            }
+        }
+        
+        function populateOfferSelector() {
+            // Esta función ya no se usa, pero la mantenemos por compatibilidad
+        }
+        
+        function handleManualOfferSelection(e) {
+            // Esta función ya no se usa, pero la mantenemos por compatibilidad
+        }
+        
         // --- FIX: Cancelación del Escáner ---
         function cancelScanner() {
             stopScanner(); // Detiene el stream de la cámara
@@ -3173,6 +3915,9 @@
             document.querySelectorAll('input[name="comparison_mode"]').forEach(r => {
                 r.addEventListener('change', (e) => updateComparisonMode(e.target.value));
             });
+            
+            // Event listener para botón de confirmar selección de oferta
+            document.getElementById('confirm-offer-selection-btn').addEventListener('click', confirmOfferSelection);
             
             // Disparar evento de cambio inicial para aplicar el branding pre-seleccionado
             const initialModeInput = document.querySelector('input[name="comparison_mode"]:checked');
@@ -3451,20 +4196,38 @@
                 
                 if (!isManual6PeriodInput) {
                     // Si es QR o Input Manual simplificado (solo 3 consumos/2 potencias)
-                    // Heurística: Propagar las potencias P1 y P2 a los 6 periodos (P1->P1/P3/P5, P2->P2/P4/P6)
-                    // Los consumos E1/E2/E3 (Punta/Llano/Valle) van a P1/P2/P3, y el resto es cero.
+                    // IMPORTANTE: Para 3.0TD las facturas muestran solo Punta/Llano/Valle
+                    // pero la tarifa tiene 6 periodos de precios
                     
+                    // Potencias: Propagar P1 y P2 a los 6 periodos
+                    dataForCalc.potencia_p1_kw = p1_kw;
+                    dataForCalc.potencia_p2_kw = p2_kw;
                     dataForCalc.potencia_p3_kw = p1_kw;
                     dataForCalc.potencia_p4_kw = p2_kw;
                     dataForCalc.potencia_p5_kw = p1_kw;  
                     dataForCalc.potencia_p6_kw = p2_kw;  
                     
-                    dataForCalc.consumo_p1 = data.consumo_punta || 0; // E1 (Punta)
-                    dataForCalc.consumo_p2 = data.consumo_llano || 0; // E2 (Llano)
-                    dataForCalc.consumo_p3 = data.consumo_valle || 0; // E3 (Valle)
-                    dataForCalc.consumo_p4 = 0;
-                    dataForCalc.consumo_p5 = 0;
-                    dataForCalc.consumo_p6 = 0;
+                    // Consumos: Distribuir Punta/Llano/Valle entre los 6 periodos
+                    // Estrategia: Asignar cada consumo a 2 periodos (duplicar)
+                    const punta = data.consumo_punta || 0;
+                    const llano = data.consumo_llano || 0;
+                    const valle = data.consumo_valle || 0;
+                    
+                    // Distribución típica en tarifas 3.0TD:
+                    // P1, P4 = Punta (horas más caras)
+                    // P2, P5 = Llano (horas medias)
+                    // P3, P6 = Valle (horas más baratas)
+                    dataForCalc.consumo_p1 = punta / 2;  // Mitad de punta
+                    dataForCalc.consumo_p2 = llano / 2;  // Mitad de llano
+                    dataForCalc.consumo_p3 = valle / 2;  // Mitad de valle
+                    dataForCalc.consumo_p4 = punta / 2;  // Otra mitad de punta
+                    dataForCalc.consumo_p5 = llano / 2;  // Otra mitad de llano
+                    dataForCalc.consumo_p6 = valle / 2;  // Otra mitad de valle
+                    
+                    console.log('3.0TD QR Mode: Distributing consumptions across 6 periods');
+                    console.log('Original - Punta:', punta, 'Llano:', llano, 'Valle:', valle);
+                    console.log('Distributed - P1:', dataForCalc.consumo_p1, 'P2:', dataForCalc.consumo_p2, 'P3:', dataForCalc.consumo_p3);
+                    console.log('Distributed - P4:', dataForCalc.consumo_p4, 'P5:', dataForCalc.consumo_p5, 'P6:', dataForCalc.consumo_p6);
                     
                 } else {
                     // Es una entrada manual completa de 6 periodos
@@ -3508,34 +4271,61 @@
             
             let finalIndividualResult = bestOverall;
             
-            // --- LÓGICA DE SELECCIÓN INDIVIDUAL SEGÚN MODO DE COMPARACIÓN ---
-            let brand = activeBrand; // Use active brand set by landing page
-
-            // Lógica de selección de mejor oferta mejorada
-            if (comparisonMode === 'overall_best') {
-                // Modo POWER CUP: Buscar la mejor oferta absoluta (con o sin DRK)
-                finalIndividualResult = bestOverall;
+            // --- GUARDAR OFERTAS CON AHORRO POSITIVO PARA SELECCIÓN MANUAL ---
+            availableOffers = results.filter(r => {
+                const hasPositiveSavings = r.savings > 0 && r.totalAnnual < r.originalBillAnnual;
                 
-                // Aplicar branding según quién ganó
+                // Si modo es "DRK ÚNICAMENTE", filtrar solo ofertas DRK
+                if (comparisonMode === 'drk_only') {
+                    return hasPositiveSavings && r.offer.isDrk;
+                }
+                
+                // En otros modos, mostrar todas las ofertas con ahorro
+                return hasPositiveSavings;
+            });
+            
+            // --- LÓGICA DE SELECCIÓN INDIVIDUAL SEGÚN MODO DE COMPARACIÓN ---
+            let brand = activeBrand;
+            
+            // Si hay una oferta seleccionada manualmente (desde el modal), usarla
+            if (manuallySelectedOffer) {
+                finalIndividualResult = manuallySelectedOffer;
+                
+                // Aplicar branding según la oferta seleccionada
                 if (finalIndividualResult.offer.isDrk) {
                     brand = BRANDS.DRK;
                 } else {
                     brand = BRANDS.POWER_CUP;
                 }
             } else {
-                // Modos DRK (drk_only, drk_prioritized)
-                if (comparisonMode === 'drk_only') {
-                    finalIndividualResult = bestDrk || bestOverall;
-                } else if (comparisonMode === 'drk_prioritized') {
-                    // Usar DRK si tiene ahorro, sino usar la mejor absoluta
-                    finalIndividualResult = (bestDrk && bestDrk.totalAnnual < bestDrk.originalBillAnnual) ? bestDrk : bestOverall;
-                }
-
-                // Aplicar branding según quién ganó
-                if (finalIndividualResult.savings > 0 && !finalIndividualResult.offer.isDrk) {
-                    brand = BRANDS.POWER_CUP;
+                // Modo automático según el modo de comparación
+                if (comparisonMode === 'overall_best') {
+                    // Modo POWER CUP: Buscar la mejor oferta absoluta (con o sin DRK)
+                    finalIndividualResult = bestOverall;
+                    
+                    // Aplicar branding según quién ganó
+                    if (finalIndividualResult.offer.isDrk) {
+                        brand = BRANDS.DRK;
+                    } else {
+                        brand = BRANDS.POWER_CUP;
+                    }
                 } else {
-                    brand = BRANDS.DRK;
+                    // Modos DRK (drk_only, drk_prioritized)
+                    if (comparisonMode === 'drk_only') {
+                        finalIndividualResult = bestDrk || bestOverall;
+                        // DRK ÚNICAMENTE: SIEMPRE mantener branding DRK (azul)
+                        brand = BRANDS.DRK;
+                    } else if (comparisonMode === 'drk_prioritized') {
+                        // Usar DRK si tiene ahorro, sino usar la mejor absoluta
+                        finalIndividualResult = (bestDrk && bestDrk.totalAnnual < bestDrk.originalBillAnnual) ? bestDrk : bestOverall;
+                        
+                        // DRK PRIORITARIO: Solo cambiar a POWER_CUP si ganó una comercializadora NO-DRK
+                        if (finalIndividualResult.offer.isDrk) {
+                            brand = BRANDS.DRK;
+                        } else {
+                            brand = BRANDS.POWER_CUP;
+                        }
+                    }
                 }
             }
 
@@ -3562,25 +4352,54 @@
             applyBrandStyles(brand);
             
             // Ensure the correct tariff type used for calculation is stored
-            finalIndividualResult.originalTariffType = tariffType;  
+            finalIndividualResult.originalTariffType = tariffType;
+            
+            // Copiar datos base del suministro (CUPS, días facturados, importe, etc.)
+            finalIndividualResult.cups = data.cups || '';
+            finalIndividualResult.importe_total = data.importe_total || 0;
+            finalIndividualResult.dias_facturados = data.dias_facturados || 30;
 
-            // Copy back the 6-period power and consumption values in case they were generated (for 3.0TD/6.1TD)
+            // Copy back the 6-period power and consumption values in case they were generated (for 3.0TD)
             if (tariffType === '3.0TD') {
                 for (let i = 1; i <= 6; i++) {
                     finalIndividualResult[`consumo_p${i}`] = dataForCalc[`consumo_p${i}`] || 0;
                     finalIndividualResult[`potencia_p${i}_kw`] = dataForCalc[`potencia_p${i}_kw`] || 0;
                 }
+            } else if (tariffType === '2.0TD') {
+                // Para 2.0TD también copiar los datos
+                finalIndividualResult.consumo_punta = dataForCalc.consumo_punta || 0;
+                finalIndividualResult.consumo_llano = dataForCalc.consumo_llano || 0;
+                finalIndividualResult.consumo_valle = dataForCalc.consumo_valle || 0;
+                finalIndividualResult.potencia_p1_kw = dataForCalc.potencia_p1_kw || 0;
+                finalIndividualResult.potencia_p2_kw = dataForCalc.potencia_p2_kw || 0;
             }
-
-            multiCupsData.push(finalIndividualResult);
             
-            // Actualizar UI y volver a la vista SAGA
-            document.getElementById('tariff-display-badge').textContent = multiCupsData.length;
+            // --- NUEVA LÓGICA: Modal de decisión en MultiCups (TODOS LOS MODOS) ---
+            // Si hay más de 1 oferta con ahorro, permitir elegir (en cualquier modo)
+            if (availableOffers.length > 1) {
+                console.log('MultiCups (' + comparisonMode + '): Showing decision modal with', availableOffers.length, 'offers');
+                
+                // Guardar temporalmente el resultado para usarlo después
+                lastComparisonResult = finalIndividualResult;
+                lastComparisonResult.isMulti = false;
+                lastComparisonResult._multiCupsContext = {
+                    tariffType: tariffType,
+                    dataForCalc: dataForCalc
+                };
+                
+                // Mostrar modal de decisión
+                showOfferDecisionModal();
+                return; // No añadir todavía, esperar decisión del usuario
+            }
             
-            window.showMessageModal(`Suministro ${finalIndividualResult.cups} (${tariffType}) añadido. Total: ${multiCupsData.length}`, "Suministro Añadido");
+            // Añadir directamente si solo hay 1 oferta o ninguna
+            // IMPORTANTE: Usar addSupplyToMultiCupsList para que recalcule costes correctamente
+            addSupplyToMultiCupsList(finalIndividualResult);
             
-            document.getElementById('initial-view').classList.add('hidden');
-            showMultiCupsSagaView();
+            // La función addSupplyToMultiCupsList ya actualiza la UI, pero como estamos
+            // en saveSupply, NO llamamos a showMultiCupsSagaView aquí
+            // (se llama dentro de addSupplyToMultiCupsList)
+            return; // Salir para no ejecutar código duplicado
         }
 
         // --- FETCH & PARSE (Actualizado para Múltiples Tarifas) ---
