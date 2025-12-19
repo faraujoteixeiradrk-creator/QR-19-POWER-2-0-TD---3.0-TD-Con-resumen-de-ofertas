@@ -3466,6 +3466,17 @@
                 }
             } else if (tariffType === '3.0TD') {
                 console.log('=== 3.0TD DETAILED DEBUG ===');
+                console.log('BEFORE PROPAGATION:');
+                console.log('p1_price:', selectedOffer.p1_price);
+                console.log('p2_price:', selectedOffer.p2_price);
+                console.log('p3_price:', selectedOffer.p3_price);
+                console.log('p4_price:', selectedOffer.p4_price);
+                console.log('p5_price:', selectedOffer.p5_price);
+                console.log('p6_price:', selectedOffer.p6_price);
+                
+                console.log('p_potencia_1:', selectedOffer.p_potencia_1);
+                console.log('p_potencia_2:', selectedOffer.p_potencia_2);
+                console.log('p_potencia_3:', selectedOffer.p_potencia_3);
                 
                 // IMPORTANTE: Algunas tarifas 3.0TD solo tienen 3 precios definidos
                 // Necesitamos propagar los precios existentes a los 6 periodos
