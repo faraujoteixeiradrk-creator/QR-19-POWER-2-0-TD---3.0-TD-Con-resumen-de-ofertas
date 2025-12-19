@@ -4300,6 +4300,12 @@
                 return hasPositiveSavings;
             });
             
+            console.log('=== AVAILABLE OFFERS DEBUG ===');
+            console.log('Total availableOffers:', availableOffers.length);
+            availableOffers.forEach((offer, idx) => {
+                console.log(`Offer ${idx}: ${offer.offer.name}, p1_price: ${offer.offer.p1_price}, p_potencia_1: ${offer.offer.p_potencia_1}`);
+            });
+            
             // --- LÓGICA DE SELECCIÓN INDIVIDUAL SEGÚN MODO DE COMPARACIÓN ---
             let brand = activeBrand;
             
