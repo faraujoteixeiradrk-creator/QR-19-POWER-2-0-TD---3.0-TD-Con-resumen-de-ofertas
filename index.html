@@ -4194,6 +4194,10 @@
         };
 
         function saveSupply(data, tariffType) {
+            // CRÍTICO: Limpiar variables globales para evitar contaminación de CUPS anteriores
+            availableOffers = [];
+            lastComparisonResult = null;
+            
             const tariffsToCompare = currentTariffs[tariffType];
             if (!tariffsToCompare || tariffsToCompare.length === 0) {
                 window.showErrorModal(`Las tarifas ${tariffType} no están cargadas.`);
