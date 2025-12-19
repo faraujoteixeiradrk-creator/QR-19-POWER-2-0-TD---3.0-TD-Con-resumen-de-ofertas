@@ -3797,7 +3797,21 @@
         
         function handleOfferRadioChange(e) {
             const selectedIndex = parseInt(e.target.value);
-            manuallySelectedOffer = availableOffers[selectedIndex];
+            
+            // CRÍTICO: No guardar el objeto completo de availableOffers
+            // Solo guardar la información necesaria para buscar la tarifa original después
+            const selectedOffer = availableOffers[selectedIndex];
+            manuallySelectedOffer = {
+                ...selectedOffer,
+                // Guardar identificadores para buscar la tarifa original
+                _needsOriginalLookup: true,
+                _tariffName: selectedOffer.offer.name,
+                _tariffDescription: selectedOffer.offer.description,
+                _tariffType: selectedOffer.originalTariffType || lastComparisonResult?.originalTariffType
+            };
+            
+            console.log('Selected offer for manual selection:', manuallySelectedOffer._tariffName);
+            console.log('Tariff type:', manuallySelectedOffer._tariffType);
             
             // Actualizar estilos visuales
             document.querySelectorAll('.offer-radio-card').forEach((card, idx) => {
@@ -3857,8 +3871,16 @@
                 // Contexto MultiCups: Necesitamos TODOS los datos de lastComparisonResult
                 // pero con la OFERTA seleccionada manualmente
                 console.log('MultiCups context detected');
+                console.log('Selected offer name:', result.offer.name);
+                console.log('Selected offer type:', result._tariffType || lastComparisonResult.originalTariffType);
+                
+                // Si la oferta seleccionada tiene la marca de que necesita búsqueda original
+                if (result._needsOriginalLookup) {
+                    console.log('🔍 Manual selection detected - will lookup original tariff');
+                }
                 
                 // Usar la función centralizada para recalcular costes
+                // Esta función buscará la tarifa original en currentTariffs
                 const recalculated = recalculateCostsForOffer(lastComparisonResult, result.offer);
                 
                 // Crear un nuevo objeto combinando lastComparisonResult (datos base) 
