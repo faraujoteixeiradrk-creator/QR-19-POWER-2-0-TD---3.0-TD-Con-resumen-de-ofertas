@@ -3788,11 +3788,14 @@
             };
             
             // Actualizar estilos visuales
-            document.querySelectorAll('.offer-radio-card').forEach((card, idx) => {
+            document.querySelectorAll('.offer-radio-card').forEach((card) => {
+                const radio = card.querySelector('input[type="radio"]');
+                const radioValue = parseInt(radio.value);
                 const content = card.querySelector('.offer-card-content');
                 const check = card.querySelector('.checkmark-offer');
                 
-                if (idx === selectedIndex) {
+                // Comparar por el VALUE del radio, no por el índice del DOM
+                if (radioValue === selectedIndex) {
                     content.className = 'offer-card-content flex items-start gap-4 p-4 rounded-xl border-2 border-drk-500 bg-drk-50 transition';
                     check.classList.remove('hidden');
                     check.classList.add('text-drk-600');
