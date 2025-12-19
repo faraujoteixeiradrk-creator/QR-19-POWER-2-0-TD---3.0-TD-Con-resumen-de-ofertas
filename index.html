@@ -3427,18 +3427,26 @@
             console.log('BaseData CUPS:', baseData.cups);
             console.log('SelectedOffer name:', selectedOffer.name);
             console.log('SelectedOffer description:', selectedOffer.description);
+            console.log('SelectedOffer p1_price BEFORE lookup:', selectedOffer.p1_price);
             
             // CRÍTICO: Buscar la tarifa ORIGINAL en currentTariffs
             // en lugar de usar selectedOffer que puede estar contaminado
+            console.log('🔍 Searching in currentTariffs[' + tariffType + ']...');
+            console.log('Available tariffs:', currentTariffs[tariffType]?.length);
+            
             const originalTariff = currentTariffs[tariffType]?.find(t => 
                 t.name === selectedOffer.name && t.description === selectedOffer.description
             );
             
             if (!originalTariff) {
-                console.error('No se encontró la tarifa original en currentTariffs!');
-                console.error('Buscando:', selectedOffer.name, selectedOffer.description);
-                console.error('Disponibles:', currentTariffs[tariffType]?.length);
+                console.error('❌ No se encontró la tarifa original en currentTariffs!');
+                console.error('Buscando:', selectedOffer.name, '/', selectedOffer.description);
+                console.error('Disponibles en currentTariffs[' + tariffType + ']:');
+                currentTariffs[tariffType]?.slice(0, 3).forEach(t => {
+                    console.error('  -', t.name, '/', t.description);
+                });
                 // Fallback: usar selectedOffer si no se encuentra
+                console.error('⚠️ Using selectedOffer as fallback (may be contaminated)');
                 return recalculateCostsFromOffer(baseData, selectedOffer, tariffType);
             }
             
@@ -4395,16 +4403,26 @@
             
             let finalIndividualResult = bestOverall;
             
-            // --- GUARDAR OFERTAS CON AHORRO POSITIVO PARA SELECCIÓN MANUAL ---
+            // --- GUARDAR OFERTAS PARA SELECCIÓN MANUAL ---
+            // En MultiCups, permitir elegir entre TODAS las ofertas (con o sin ahorro)
+            // para dar al usuario la máxima flexibilidad
+            const isMultiCupsMode = currentTariffType === 'MULTICUPS';
+            
             availableOffers = results.filter(r => {
-                const hasPositiveSavings = r.savings > 0 && r.totalAnnual < r.originalBillAnnual;
-                
                 // Si modo es "DRK ÚNICAMENTE", filtrar solo ofertas DRK
                 if (comparisonMode === 'drk_only') {
-                    return hasPositiveSavings && r.offer.isDrk;
+                    // En MultiCups: mostrar TODAS las ofertas DRK (con o sin ahorro)
+                    // En Individual: solo ofertas DRK con ahorro positivo
+                    if (isMultiCupsMode) {
+                        return r.offer.isDrk && r.offer.name !== 'Tu Tarifa Actual';
+                    } else {
+                        const hasPositiveSavings = r.savings > 0 && r.totalAnnual < r.originalBillAnnual;
+                        return hasPositiveSavings && r.offer.isDrk;
+                    }
                 }
                 
-                // En otros modos, mostrar todas las ofertas con ahorro
+                // En otros modos, mostrar ofertas con ahorro
+                const hasPositiveSavings = r.savings > 0 && r.totalAnnual < r.originalBillAnnual;
                 return hasPositiveSavings;
             });
             
