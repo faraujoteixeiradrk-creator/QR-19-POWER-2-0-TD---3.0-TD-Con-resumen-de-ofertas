@@ -4406,11 +4406,14 @@
             // --- GUARDAR OFERTAS PARA SELECCIÓN MANUAL ---
             // En MultiCups, permitir elegir entre TODAS las ofertas (con o sin ahorro)
             // para dar al usuario la máxima flexibilidad
-            const isMultiCupsMode = currentTariffType === 'MULTICUPS';
+            // CRÍTICO: Verificar currentTariffType (que indica el modo general)
+            // NO tariffType (que es el tipo específico del CUPS actual: 2.0TD o 3.0TD)
+            const isInMultiCupsFlow = currentTariffType === 'MULTICUPS';
             
             console.log('=== FILTER AVAILABLE OFFERS ===');
-            console.log('currentTariffType:', currentTariffType);
-            console.log('isMultiCupsMode:', isMultiCupsMode);
+            console.log('currentTariffType (flow):', currentTariffType);
+            console.log('tariffType (this CUPS):', tariffType);
+            console.log('isInMultiCupsFlow:', isInMultiCupsFlow);
             console.log('comparisonMode:', comparisonMode);
             console.log('Total results:', results.length);
             
@@ -4419,7 +4422,7 @@
                 if (comparisonMode === 'drk_only') {
                     // En MultiCups: mostrar TODAS las ofertas DRK (con o sin ahorro)
                     // En Individual: solo ofertas DRK con ahorro positivo
-                    if (isMultiCupsMode) {
+                    if (isInMultiCupsFlow) {
                         const isDrkOffer = r.offer.isDrk && r.offer.name !== 'Tu Tarifa Actual';
                         if (isDrkOffer) {
                             console.log('Including DRK offer:', r.offer.name, '(savings:', r.savings, ')');
