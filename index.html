@@ -4431,7 +4431,10 @@
             
             // DEBUG: Alert visible
             if (comparisonMode === 'drk_only' && tariffType === '3.0TD') {
-                alert(`DEBUG:\ncurrentTariffType: ${currentTariffType}\nisInMultiCupsFlow: ${isInMultiCupsFlow}\nTotal results: ${results.length}`);
+                // Contar cuántas ofertas DRK hay realmente
+                const drkCount = results.filter(r => r.offer.isDrk).length;
+                const drkNotCurrent = results.filter(r => r.offer.isDrk && r.offer.name !== 'Tu Tarifa Actual').length;
+                alert(`DEBUG:\ncurrentTariffType: ${currentTariffType}\nisInMultiCupsFlow: ${isInMultiCupsFlow}\nTotal results: ${results.length}\nDRK offers: ${drkCount}\nDRK (not current): ${drkNotCurrent}`);
             }
             
             availableOffers = results.filter(r => {
