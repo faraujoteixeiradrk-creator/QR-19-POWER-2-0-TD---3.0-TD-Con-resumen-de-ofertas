@@ -4285,6 +4285,7 @@
             // CRÍTICO: Limpiar variables globales para evitar contaminación de CUPS anteriores
             availableOffers = [];
             lastComparisonResult = null;
+            manuallySelectedOffer = null;  // ← CRÍTICO: Limpiar selección manual anterior
             
             console.log('=== VERIFICACIÓN CURRENTTARIFFS ===');
             console.log('currentTariffs keys:', Object.keys(currentTariffs));
