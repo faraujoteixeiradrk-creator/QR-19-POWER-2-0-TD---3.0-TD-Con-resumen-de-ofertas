@@ -3681,6 +3681,14 @@
         
         // Funciones para el modal de selección de ofertas
         function showOfferSelectionModal(cups) {
+            console.log('=== OPENING OFFER SELECTION MODAL ===');
+            console.log('CUPS:', cups);
+            console.log('availableOffers.length:', availableOffers.length);
+            console.log('First 5 offers:');
+            availableOffers.slice(0, 5).forEach((o, i) => {
+                console.log(`  ${i+1}. ${o.offer.name} - Ahorro: ${o.savings.toFixed(2)}€`);
+            });
+            
             // Mostrar CUPS en el modal
             document.getElementById('modal-selection-cups').textContent = cups;
             
@@ -4417,6 +4425,11 @@
             console.log('comparisonMode:', comparisonMode);
             console.log('Total results:', results.length);
             
+            // DEBUG: Alert visible
+            if (comparisonMode === 'drk_only' && tariffType === '3.0TD') {
+                alert(`DEBUG:\ncurrentTariffType: ${currentTariffType}\nisInMultiCupsFlow: ${isInMultiCupsFlow}\nTotal results: ${results.length}`);
+            }
+            
             availableOffers = results.filter(r => {
                 // Si modo es "DRK ÚNICAMENTE", filtrar solo ofertas DRK
                 if (comparisonMode === 'drk_only') {
@@ -4440,6 +4453,11 @@
             });
             
             console.log('Filtered availableOffers.length:', availableOffers.length);
+            
+            // DEBUG: Alert visible con resultado del filtro
+            if (comparisonMode === 'drk_only' && tariffType === '3.0TD') {
+                alert(`FILTERED:\navailableOffers.length: ${availableOffers.length}\nWill show modal? ${availableOffers.length > 1}`);
+            }
             
             console.log('=== AVAILABLE OFFERS DEBUG ===');
             console.log('Total availableOffers:', availableOffers.length);
