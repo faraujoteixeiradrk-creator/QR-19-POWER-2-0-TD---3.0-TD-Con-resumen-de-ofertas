@@ -4408,13 +4408,23 @@
             // para dar al usuario la máxima flexibilidad
             const isMultiCupsMode = currentTariffType === 'MULTICUPS';
             
+            console.log('=== FILTER AVAILABLE OFFERS ===');
+            console.log('currentTariffType:', currentTariffType);
+            console.log('isMultiCupsMode:', isMultiCupsMode);
+            console.log('comparisonMode:', comparisonMode);
+            console.log('Total results:', results.length);
+            
             availableOffers = results.filter(r => {
                 // Si modo es "DRK ÚNICAMENTE", filtrar solo ofertas DRK
                 if (comparisonMode === 'drk_only') {
                     // En MultiCups: mostrar TODAS las ofertas DRK (con o sin ahorro)
                     // En Individual: solo ofertas DRK con ahorro positivo
                     if (isMultiCupsMode) {
-                        return r.offer.isDrk && r.offer.name !== 'Tu Tarifa Actual';
+                        const isDrkOffer = r.offer.isDrk && r.offer.name !== 'Tu Tarifa Actual';
+                        if (isDrkOffer) {
+                            console.log('Including DRK offer:', r.offer.name, '(savings:', r.savings, ')');
+                        }
+                        return isDrkOffer;
                     } else {
                         const hasPositiveSavings = r.savings > 0 && r.totalAnnual < r.originalBillAnnual;
                         return hasPositiveSavings && r.offer.isDrk;
@@ -4425,6 +4435,8 @@
                 const hasPositiveSavings = r.savings > 0 && r.totalAnnual < r.originalBillAnnual;
                 return hasPositiveSavings;
             });
+            
+            console.log('Filtered availableOffers.length:', availableOffers.length);
             
             console.log('=== AVAILABLE OFFERS DEBUG ===');
             console.log('Total availableOffers:', availableOffers.length);
@@ -4524,8 +4536,12 @@
             
             // --- NUEVA LÓGICA: Modal de decisión en MultiCups (TODOS LOS MODOS) ---
             // Si hay más de 1 oferta con ahorro, permitir elegir (en cualquier modo)
+            console.log('=== DECISION MODAL CHECK ===');
+            console.log('availableOffers.length:', availableOffers.length);
+            console.log('Will show modal?', availableOffers.length > 1);
+            
             if (availableOffers.length > 1) {
-                console.log('MultiCups (' + comparisonMode + '): Showing decision modal with', availableOffers.length, 'offers');
+                console.log('✅ MultiCups (' + comparisonMode + '): Showing decision modal with', availableOffers.length, 'offers');
                 
                 // Guardar temporalmente el resultado para usarlo después
                 lastComparisonResult = finalIndividualResult;
@@ -4539,6 +4555,8 @@
                 showOfferDecisionModal();
                 return; // No añadir todavía, esperar decisión del usuario
             }
+            
+            console.log('❌ Adding directly without modal (only', availableOffers.length, 'offer(s))');
             
             // Añadir directamente si solo hay 1 oferta o ninguna
             // IMPORTANTE: Usar addSupplyToMultiCupsList para que recalcule costes correctamente
