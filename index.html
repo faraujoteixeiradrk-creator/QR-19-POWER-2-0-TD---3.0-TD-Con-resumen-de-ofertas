@@ -3408,8 +3408,17 @@
             
             console.log('=== RECALCULATE COSTS DEBUG ===');
             console.log('Tariff type:', tariffType);
-            console.log('BaseData keys:', Object.keys(baseData));
-            console.log('SelectedOffer keys:', Object.keys(selectedOffer));
+            console.log('BaseData CUPS:', baseData.cups);
+            console.log('SelectedOffer name:', selectedOffer.name);
+            console.log('SelectedOffer description:', selectedOffer.description);
+            console.log('SelectedOffer isDrk:', selectedOffer.isDrk);
+            console.log('SelectedOffer p1_price:', selectedOffer.p1_price);
+            console.log('SelectedOffer p2_price:', selectedOffer.p2_price);
+            console.log('SelectedOffer p3_price:', selectedOffer.p3_price);
+            console.log('SelectedOffer p4_price:', selectedOffer.p4_price);
+            console.log('SelectedOffer p_potencia_1:', selectedOffer.p_potencia_1);
+            console.log('SelectedOffer p_potencia_2:', selectedOffer.p_potencia_2);
+            console.log('SelectedOffer p_potencia_3:', selectedOffer.p_potencia_3);
             
             if (tariffType === '2.0TD') {
                 // Calcular energía para 2.0TD (3 periodos)
