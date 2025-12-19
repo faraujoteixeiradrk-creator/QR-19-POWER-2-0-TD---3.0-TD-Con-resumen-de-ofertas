@@ -4189,6 +4189,13 @@
                 return;
             }
             
+            console.log('=== SAVE SUPPLY DEBUG ===');
+            console.log('TariffType:', tariffType);
+            console.log('Tarifas disponibles:', tariffsToCompare.length);
+            console.log('Primera tarifa name:', tariffsToCompare[0]?.name);
+            console.log('Primera tarifa p1_price:', tariffsToCompare[0]?.p1_price);
+            console.log('Primera tarifa p_potencia_1:', tariffsToCompare[0]?.p_potencia_1);
+            
             // Creamos un nuevo objeto de datos para el cálculo, ya que el cálculo interno necesita los campos correctos (consumo_p1, consumo_p2, etc.)
             let dataForCalc = { ...data };
             
