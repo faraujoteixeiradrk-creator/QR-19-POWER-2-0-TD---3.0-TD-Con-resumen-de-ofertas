@@ -3428,13 +3428,25 @@
             console.log('SelectedOffer name:', selectedOffer.name);
             console.log('SelectedOffer description:', selectedOffer.description);
             console.log('SelectedOffer isDrk:', selectedOffer.isDrk);
-            console.log('SelectedOffer p1_price:', selectedOffer.p1_price);
-            console.log('SelectedOffer p2_price:', selectedOffer.p2_price);
-            console.log('SelectedOffer p3_price:', selectedOffer.p3_price);
-            console.log('SelectedOffer p4_price:', selectedOffer.p4_price);
-            console.log('SelectedOffer p_potencia_1:', selectedOffer.p_potencia_1);
-            console.log('SelectedOffer p_potencia_2:', selectedOffer.p_potencia_2);
-            console.log('SelectedOffer p_potencia_3:', selectedOffer.p_potencia_3);
+            
+            // CRÍTICO: Extraer valores primitivos ANTES de usarlos
+            // Esto evita cualquier referencia compartida
+            const offerPrices = {
+                p1_price: Number(selectedOffer.p1_price) || 0,
+                p2_price: Number(selectedOffer.p2_price) || 0,
+                p3_price: Number(selectedOffer.p3_price) || 0,
+                p4_price: Number(selectedOffer.p4_price) || 0,
+                p5_price: Number(selectedOffer.p5_price) || 0,
+                p6_price: Number(selectedOffer.p6_price) || 0,
+                p_potencia_1: Number(selectedOffer.p_potencia_1) || 0,
+                p_potencia_2: Number(selectedOffer.p_potencia_2) || 0,
+                p_potencia_3: Number(selectedOffer.p_potencia_3) || 0,
+                p_potencia_4: Number(selectedOffer.p_potencia_4) || 0,
+                p_potencia_5: Number(selectedOffer.p_potencia_5) || 0,
+                p_potencia_6: Number(selectedOffer.p_potencia_6) || 0
+            };
+            
+            console.log('Extracted prices (primitives):', offerPrices);
             
             if (tariffType === '2.0TD') {
                 // Calcular energía para 2.0TD (3 periodos)
@@ -3444,9 +3456,9 @@
                     baseData.consumo_valle || 0
                 ];
                 const preciosEnergia = [
-                    selectedOffer.p1_price || 0,
-                    selectedOffer.p2_price || 0,
-                    selectedOffer.p3_price || 0
+                    offerPrices.p1_price,
+                    offerPrices.p2_price,
+                    offerPrices.p3_price
                 ];
                 
                 console.log('2.0TD Consumos:', consumos);
@@ -3467,8 +3479,8 @@
                     baseData.potencia_p2_kw || 0
                 ];
                 const preciosPotencia = [
-                    (selectedOffer.p_potencia_1 || 0) / 365,
-                    (selectedOffer.p_potencia_2 || 0) / 365
+                    offerPrices.p_potencia_1 / 365,
+                    offerPrices.p_potencia_2 / 365
                 ];
                 const diasFacturados = baseData.dias_facturados || 30;
                 
@@ -3483,60 +3495,64 @@
             } else if (tariffType === '3.0TD') {
                 console.log('=== 3.0TD DETAILED DEBUG ===');
                 console.log('BEFORE PROPAGATION:');
-                console.log('p1_price:', selectedOffer.p1_price);
-                console.log('p2_price:', selectedOffer.p2_price);
-                console.log('p3_price:', selectedOffer.p3_price);
-                console.log('p4_price:', selectedOffer.p4_price);
-                console.log('p5_price:', selectedOffer.p5_price);
-                console.log('p6_price:', selectedOffer.p6_price);
+                console.log('p1_price:', offerPrices.p1_price);
+                console.log('p2_price:', offerPrices.p2_price);
+                console.log('p3_price:', offerPrices.p3_price);
+                console.log('p4_price:', offerPrices.p4_price);
+                console.log('p5_price:', offerPrices.p5_price);
+                console.log('p6_price:', offerPrices.p6_price);
                 
-                console.log('p_potencia_1:', selectedOffer.p_potencia_1);
-                console.log('p_potencia_2:', selectedOffer.p_potencia_2);
-                console.log('p_potencia_3:', selectedOffer.p_potencia_3);
+                console.log('p_potencia_1:', offerPrices.p_potencia_1);
+                console.log('p_potencia_2:', offerPrices.p_potencia_2);
+                console.log('p_potencia_3:', offerPrices.p_potencia_3);
                 
                 // IMPORTANTE: Algunas tarifas 3.0TD solo tienen 3 precios definidos
                 // Necesitamos propagar los precios existentes a los 6 periodos
                 
                 // Detectar si la tarifa tiene 6 precios o solo 3
-                const hasFull6Periods = selectedOffer.p4_price !== undefined && selectedOffer.p4_price > 0;
+                const hasFull6Periods = offerPrices.p4_price > 0;
                 
                 let prices = [];
                 if (hasFull6Periods) {
                     // Tarifa con 6 periodos completos
                     prices = [
-                        selectedOffer.p1_price || 0,
-                        selectedOffer.p2_price || 0,
-                        selectedOffer.p3_price || 0,
-                        selectedOffer.p4_price || 0,
-                        selectedOffer.p5_price || 0,
-                        selectedOffer.p6_price || 0
+                        offerPrices.p1_price,
+                        offerPrices.p2_price,
+                        offerPrices.p3_price,
+                        offerPrices.p4_price,
+                        offerPrices.p5_price,
+                        offerPrices.p6_price
                     ];
                 } else {
                     // Tarifa con solo 3 precios: propagar P1->P1/P4, P2->P2/P5, P3->P3/P6
-                    const p1 = selectedOffer.p1_price || 0;
-                    const p2 = selectedOffer.p2_price || 0;
-                    const p3 = selectedOffer.p3_price || 0;
-                    prices = [p1, p2, p3, p1, p2, p3];  // Duplicar los 3 primeros
+                    prices = [
+                        offerPrices.p1_price,
+                        offerPrices.p2_price,
+                        offerPrices.p3_price,
+                        offerPrices.p1_price,
+                        offerPrices.p2_price,
+                        offerPrices.p3_price
+                    ];
                     console.log('3.0TD tariff has only 3 periods, propagating prices:', prices);
                 }
                 
                 // Detectar si la tarifa tiene 6 precios de potencia o solo 2
-                const hasFull6PowerPrices = selectedOffer.p_potencia_3 !== undefined && selectedOffer.p_potencia_3 > 0;
+                const hasFull6PowerPrices = offerPrices.p_potencia_3 > 0;
                 
                 let powerPrices = [];
                 if (hasFull6PowerPrices) {
                     powerPrices = [
-                        (selectedOffer.p_potencia_1 || 0) / 365,
-                        (selectedOffer.p_potencia_2 || 0) / 365,
-                        (selectedOffer.p_potencia_3 || 0) / 365,
-                        (selectedOffer.p_potencia_4 || 0) / 365,
-                        (selectedOffer.p_potencia_5 || 0) / 365,
-                        (selectedOffer.p_potencia_6 || 0) / 365
+                        offerPrices.p_potencia_1 / 365,
+                        offerPrices.p_potencia_2 / 365,
+                        offerPrices.p_potencia_3 / 365,
+                        offerPrices.p_potencia_4 / 365,
+                        offerPrices.p_potencia_5 / 365,
+                        offerPrices.p_potencia_6 / 365
                     ];
                 } else {
                     // Solo tiene P1 y P2: propagar P1->P1/P3/P5, P2->P2/P4/P6
-                    const p1 = (selectedOffer.p_potencia_1 || 0) / 365;
-                    const p2 = (selectedOffer.p_potencia_2 || 0) / 365;
+                    const p1 = offerPrices.p_potencia_1 / 365;
+                    const p2 = offerPrices.p_potencia_2 / 365;
                     powerPrices = [p1, p2, p1, p2, p1, p2];
                     console.log('3.0TD tariff has only 2 power prices, propagating:', powerPrices);
                 }
