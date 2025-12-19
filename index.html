@@ -4702,7 +4702,10 @@
                        item[h] = val;
                  });
 
-                 item.isDrk = item.name?.toUpperCase().includes('DRK');
+                 // Marcar como DRK si el nombre O la descripción O commercializer contienen "DRK"
+                 item.isDrk = item.name?.toUpperCase().includes('DRK') || 
+                              item.description?.toUpperCase().includes('DRK') ||
+                              item.commercializer?.toUpperCase().includes('DRK');
                  
                  // Check a mandatory field to ensure it's a valid row (using p1_price as a key indicator)
                  if(item.p1_price !== undefined) data.push(item);  
