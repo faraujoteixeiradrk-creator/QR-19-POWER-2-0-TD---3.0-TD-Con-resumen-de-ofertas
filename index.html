@@ -3419,40 +3419,22 @@
         // NUEVA: Función para recalcular energyCosts y powerCosts correctamente
         function recalculateCostsForOffer(baseData, selectedOffer) {
             const tariffType = baseData.originalTariffType;
-            const recalculatedEnergyCosts = [];
-            const recalculatedPowerCosts = [];
             
-            console.log('=== RECALCULATE COSTS DEBUG ===');
-            console.log('Tariff type:', tariffType);
-            console.log('BaseData CUPS:', baseData.cups);
-            console.log('SelectedOffer name:', selectedOffer.name);
-            console.log('SelectedOffer description:', selectedOffer.description);
-            console.log('SelectedOffer p1_price BEFORE lookup:', selectedOffer.p1_price);
+            console.log('Recalculating costs for:', selectedOffer.name, '(', tariffType, ')');
             
             // CRÍTICO: Buscar la tarifa ORIGINAL en currentTariffs
             // en lugar de usar selectedOffer que puede estar contaminado
-            console.log('🔍 Searching in currentTariffs[' + tariffType + ']...');
-            console.log('Available tariffs:', currentTariffs[tariffType]?.length);
-            
             const originalTariff = currentTariffs[tariffType]?.find(t => 
                 t.name === selectedOffer.name && t.description === selectedOffer.description
             );
             
             if (!originalTariff) {
-                console.error('❌ No se encontró la tarifa original en currentTariffs!');
-                console.error('Buscando:', selectedOffer.name, '/', selectedOffer.description);
-                console.error('Disponibles en currentTariffs[' + tariffType + ']:');
-                currentTariffs[tariffType]?.slice(0, 3).forEach(t => {
-                    console.error('  -', t.name, '/', t.description);
-                });
+                console.error('❌ Original tariff not found in currentTariffs for:', selectedOffer.name);
                 // Fallback: usar selectedOffer si no se encuentra
-                console.error('⚠️ Using selectedOffer as fallback (may be contaminated)');
                 return recalculateCostsFromOffer(baseData, selectedOffer, tariffType);
             }
             
-            console.log('✅ Tarifa original encontrada:', originalTariff.name);
-            console.log('Original p1_price:', originalTariff.p1_price);
-            console.log('Original p_potencia_1:', originalTariff.p_potencia_1);
+            console.log('✅ Using original tariff from CSV');
             
             // Usar la tarifa ORIGINAL, no selectedOffer
             return recalculateCostsFromOffer(baseData, originalTariff, tariffType);
@@ -3527,19 +3509,6 @@
                     });
                 }
             } else if (tariffType === '3.0TD') {
-                console.log('=== 3.0TD DETAILED DEBUG ===');
-                console.log('BEFORE PROPAGATION:');
-                console.log('p1_price:', offerPrices.p1_price);
-                console.log('p2_price:', offerPrices.p2_price);
-                console.log('p3_price:', offerPrices.p3_price);
-                console.log('p4_price:', offerPrices.p4_price);
-                console.log('p5_price:', offerPrices.p5_price);
-                console.log('p6_price:', offerPrices.p6_price);
-                
-                console.log('p_potencia_1:', offerPrices.p_potencia_1);
-                console.log('p_potencia_2:', offerPrices.p_potencia_2);
-                console.log('p_potencia_3:', offerPrices.p_potencia_3);
-                
                 // IMPORTANTE: Algunas tarifas 3.0TD solo tienen 3 precios definidos
                 // Necesitamos propagar los precios existentes a los 6 periodos
                 
@@ -3681,14 +3650,6 @@
         
         // Funciones para el modal de selección de ofertas
         function showOfferSelectionModal(cups) {
-            console.log('=== OPENING OFFER SELECTION MODAL ===');
-            console.log('CUPS:', cups);
-            console.log('availableOffers.length:', availableOffers.length);
-            console.log('First 5 offers:');
-            availableOffers.slice(0, 5).forEach((o, i) => {
-                console.log(`  ${i+1}. ${o.offer.name} - Ahorro: ${o.savings.toFixed(2)}€`);
-            });
-            
             // Mostrar CUPS en el modal
             document.getElementById('modal-selection-cups').textContent = cups;
             
@@ -3826,9 +3787,6 @@
                 _tariffType: selectedOffer.originalTariffType || lastComparisonResult?.originalTariffType
             };
             
-            console.log('Selected offer for manual selection:', manuallySelectedOffer._tariffName);
-            console.log('Tariff type:', manuallySelectedOffer._tariffType);
-            
             // Actualizar estilos visuales
             document.querySelectorAll('.offer-radio-card').forEach((card, idx) => {
                 const content = card.querySelector('.offer-card-content');
@@ -3886,14 +3844,7 @@
             if (isMultiCupsContext) {
                 // Contexto MultiCups: Necesitamos TODOS los datos de lastComparisonResult
                 // pero con la OFERTA seleccionada manualmente
-                console.log('MultiCups context detected');
-                console.log('Selected offer name:', result.offer.name);
-                console.log('Selected offer type:', result._tariffType || lastComparisonResult.originalTariffType);
-                
-                // Si la oferta seleccionada tiene la marca de que necesita búsqueda original
-                if (result._needsOriginalLookup) {
-                    console.log('🔍 Manual selection detected - will lookup original tariff');
-                }
+                console.log('MultiCups context: recalculating costs for selected offer');
                 
                 // Usar la función centralizada para recalcular costes
                 // Esta función buscará la tarifa original en currentTariffs
@@ -4412,10 +4363,6 @@
             let finalIndividualResult = bestOverall;
             
             // --- GUARDAR OFERTAS PARA SELECCIÓN MANUAL ---
-            
-            // DEBUG INCONDICIONAL: Este alert SIEMPRE debe aparecer
-            alert(`SAVESUPLY REACHED:\ncomparisonMode: ${comparisonMode}\ntariffType: ${tariffType}\ncurrentTariffType: ${currentTariffType}\nresults.length: ${results.length}`);
-            
             // En MultiCups, permitir elegir entre TODAS las ofertas (con o sin ahorro)
             // para dar al usuario la máxima flexibilidad
             // CRÍTICO: Verificar currentTariffType (que indica el modo general)
@@ -4429,25 +4376,13 @@
             console.log('comparisonMode:', comparisonMode);
             console.log('Total results:', results.length);
             
-            // DEBUG: Alert visible
-            if (comparisonMode === 'drk_only' && tariffType === '3.0TD') {
-                // Contar cuántas ofertas DRK hay realmente
-                const drkCount = results.filter(r => r.offer.isDrk).length;
-                const drkNotCurrent = results.filter(r => r.offer.isDrk && r.offer.name !== 'Tu Tarifa Actual').length;
-                alert(`DEBUG:\ncurrentTariffType: ${currentTariffType}\nisInMultiCupsFlow: ${isInMultiCupsFlow}\nTotal results: ${results.length}\nDRK offers: ${drkCount}\nDRK (not current): ${drkNotCurrent}`);
-            }
-            
             availableOffers = results.filter(r => {
                 // Si modo es "DRK ÚNICAMENTE", filtrar solo ofertas DRK
                 if (comparisonMode === 'drk_only') {
                     // En MultiCups: mostrar TODAS las ofertas DRK (con o sin ahorro)
                     // En Individual: solo ofertas DRK con ahorro positivo
                     if (isInMultiCupsFlow) {
-                        const isDrkOffer = r.offer.isDrk && r.offer.name !== 'Tu Tarifa Actual';
-                        if (isDrkOffer) {
-                            console.log('Including DRK offer:', r.offer.name, '(savings:', r.savings, ')');
-                        }
-                        return isDrkOffer;
+                        return r.offer.isDrk && r.offer.name !== 'Tu Tarifa Actual';
                     } else {
                         const hasPositiveSavings = r.savings > 0 && r.totalAnnual < r.originalBillAnnual;
                         return hasPositiveSavings && r.offer.isDrk;
@@ -4460,11 +4395,6 @@
             });
             
             console.log('Filtered availableOffers.length:', availableOffers.length);
-            
-            // DEBUG: Alert visible con resultado del filtro
-            if (comparisonMode === 'drk_only' && tariffType === '3.0TD') {
-                alert(`FILTERED:\navailableOffers.length: ${availableOffers.length}\nWill show modal? ${availableOffers.length > 1}`);
-            }
             
             console.log('=== AVAILABLE OFFERS DEBUG ===');
             console.log('Total availableOffers:', availableOffers.length);
@@ -4563,13 +4493,9 @@
             }
             
             // --- NUEVA LÓGICA: Modal de decisión en MultiCups (TODOS LOS MODOS) ---
-            // Si hay más de 1 oferta con ahorro, permitir elegir (en cualquier modo)
-            console.log('=== DECISION MODAL CHECK ===');
-            console.log('availableOffers.length:', availableOffers.length);
-            console.log('Will show modal?', availableOffers.length > 1);
-            
+            // Si hay más de 1 oferta, permitir elegir (en cualquier modo)
             if (availableOffers.length > 1) {
-                console.log('✅ MultiCups (' + comparisonMode + '): Showing decision modal with', availableOffers.length, 'offers');
+                console.log('MultiCups: Showing decision modal with', availableOffers.length, 'offers');
                 
                 // Guardar temporalmente el resultado para usarlo después
                 lastComparisonResult = finalIndividualResult;
@@ -4583,8 +4509,6 @@
                 showOfferDecisionModal();
                 return; // No añadir todavía, esperar decisión del usuario
             }
-            
-            console.log('❌ Adding directly without modal (only', availableOffers.length, 'offer(s))');
             
             // Añadir directamente si solo hay 1 oferta o ninguna
             // IMPORTANTE: Usar addSupplyToMultiCupsList para que recalcule costes correctamente
