@@ -3427,23 +3427,49 @@
             console.log('BaseData CUPS:', baseData.cups);
             console.log('SelectedOffer name:', selectedOffer.name);
             console.log('SelectedOffer description:', selectedOffer.description);
-            console.log('SelectedOffer isDrk:', selectedOffer.isDrk);
+            
+            // CRÍTICO: Buscar la tarifa ORIGINAL en currentTariffs
+            // en lugar de usar selectedOffer que puede estar contaminado
+            const originalTariff = currentTariffs[tariffType]?.find(t => 
+                t.name === selectedOffer.name && t.description === selectedOffer.description
+            );
+            
+            if (!originalTariff) {
+                console.error('No se encontró la tarifa original en currentTariffs!');
+                console.error('Buscando:', selectedOffer.name, selectedOffer.description);
+                console.error('Disponibles:', currentTariffs[tariffType]?.length);
+                // Fallback: usar selectedOffer si no se encuentra
+                return recalculateCostsFromOffer(baseData, selectedOffer, tariffType);
+            }
+            
+            console.log('✅ Tarifa original encontrada:', originalTariff.name);
+            console.log('Original p1_price:', originalTariff.p1_price);
+            console.log('Original p_potencia_1:', originalTariff.p_potencia_1);
+            
+            // Usar la tarifa ORIGINAL, no selectedOffer
+            return recalculateCostsFromOffer(baseData, originalTariff, tariffType);
+        }
+        
+        // Función auxiliar que hace el cálculo real
+        function recalculateCostsFromOffer(baseData, tariffOffer, tariffType) {
+            const recalculatedEnergyCosts = [];
+            const recalculatedPowerCosts = [];
             
             // CRÍTICO: Extraer valores primitivos ANTES de usarlos
             // Esto evita cualquier referencia compartida
             const offerPrices = {
-                p1_price: Number(selectedOffer.p1_price) || 0,
-                p2_price: Number(selectedOffer.p2_price) || 0,
-                p3_price: Number(selectedOffer.p3_price) || 0,
-                p4_price: Number(selectedOffer.p4_price) || 0,
-                p5_price: Number(selectedOffer.p5_price) || 0,
-                p6_price: Number(selectedOffer.p6_price) || 0,
-                p_potencia_1: Number(selectedOffer.p_potencia_1) || 0,
-                p_potencia_2: Number(selectedOffer.p_potencia_2) || 0,
-                p_potencia_3: Number(selectedOffer.p_potencia_3) || 0,
-                p_potencia_4: Number(selectedOffer.p_potencia_4) || 0,
-                p_potencia_5: Number(selectedOffer.p_potencia_5) || 0,
-                p_potencia_6: Number(selectedOffer.p_potencia_6) || 0
+                p1_price: Number(tariffOffer.p1_price) || 0,
+                p2_price: Number(tariffOffer.p2_price) || 0,
+                p3_price: Number(tariffOffer.p3_price) || 0,
+                p4_price: Number(tariffOffer.p4_price) || 0,
+                p5_price: Number(tariffOffer.p5_price) || 0,
+                p6_price: Number(tariffOffer.p6_price) || 0,
+                p_potencia_1: Number(tariffOffer.p_potencia_1) || 0,
+                p_potencia_2: Number(tariffOffer.p_potencia_2) || 0,
+                p_potencia_3: Number(tariffOffer.p_potencia_3) || 0,
+                p_potencia_4: Number(tariffOffer.p_potencia_4) || 0,
+                p_potencia_5: Number(tariffOffer.p_potencia_5) || 0,
+                p_potencia_6: Number(tariffOffer.p_potencia_6) || 0
             };
             
             console.log('Extracted prices (primitives):', offerPrices);
