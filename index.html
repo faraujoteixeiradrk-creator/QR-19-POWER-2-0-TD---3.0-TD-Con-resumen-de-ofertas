@@ -1369,7 +1369,7 @@
                 subBase, costIE, baseImp, costIVA, totalPeriod, totalAnnual,
                 originalBillAnnual,
                 savings: originalBillAnnual - totalAnnual,
-                offer: tariff,
+                offer: deepCopyOffer(tariff),  // COPIA PROFUNDA para evitar referencias compartidas
                 ieRate: IE_RATE
             };
             
@@ -3408,6 +3408,14 @@
             }
         }
         
+        // NUEVA: Función para hacer copia profunda de una oferta
+        function deepCopyOffer(offer) {
+            if (!offer) return offer;
+            
+            // Hacer copia profunda del objeto oferta
+            return JSON.parse(JSON.stringify(offer));
+        }
+        
         // NUEVA: Función para recalcular energyCosts y powerCosts correctamente
         function recalculateCostsForOffer(baseData, selectedOffer) {
             const tariffType = baseData.originalTariffType;
@@ -3815,7 +3823,7 @@
                 // con la oferta elegida manualmente y los costes recalculados
                 const combinedResult = {
                     ...lastComparisonResult,  // Todos los datos base (CUPS, consumos, potencias, etc.)
-                    offer: result.offer,      // La oferta elegida manualmente
+                    offer: deepCopyOffer(result.offer),  // COPIA PROFUNDA de la oferta
                     totalAnnual: result.totalAnnual,  // Coste anual de la oferta elegida
                     totalPeriod: result.totalPeriod,  // Coste periodo de la oferta elegida
                     savings: result.savings,          // Ahorro de la oferta elegida
@@ -4205,6 +4213,19 @@
             // CRÍTICO: Limpiar variables globales para evitar contaminación de CUPS anteriores
             availableOffers = [];
             lastComparisonResult = null;
+            
+            console.log('=== VERIFICACIÓN CURRENTTARIFFS ===');
+            console.log('currentTariffs keys:', Object.keys(currentTariffs));
+            console.log('currentTariffs[2.0TD] length:', currentTariffs['2.0TD']?.length);
+            console.log('currentTariffs[3.0TD] length:', currentTariffs['3.0TD']?.length);
+            if (currentTariffs['2.0TD']?.[0]) {
+                console.log('Primera tarifa 2.0TD - name:', currentTariffs['2.0TD'][0].name);
+                console.log('Primera tarifa 2.0TD - p1_price:', currentTariffs['2.0TD'][0].p1_price);
+            }
+            if (currentTariffs['3.0TD']?.[0]) {
+                console.log('Primera tarifa 3.0TD - name:', currentTariffs['3.0TD'][0].name);
+                console.log('Primera tarifa 3.0TD - p1_price:', currentTariffs['3.0TD'][0].p1_price);
+            }
             
             const tariffsToCompare = currentTariffs[tariffType];
             if (!tariffsToCompare || tariffsToCompare.length === 0) {
