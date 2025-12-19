@@ -1137,9 +1137,13 @@
 
         function resetToLanding() {
             stopScanner();
+            
+            // CRÍTICO: Limpiar TODAS las variables globales
             lastComparisonResult = null;
             multiCupsData = []; // Limpiar datos de multicups
             multiCupsAddType = null; // NEW: Reset sub-type
+            availableOffers = [];
+            manuallySelectedOffer = null;
             
             // Restaurar la marca activa según el modo de comparación
             const brandToApply = comparisonMode === 'overall_best' ? BRANDS.POWER_CUP : BRANDS.DRK;
@@ -1190,8 +1194,12 @@
 
             if (config.isMulti) {
                 // NEW: FLujo MULTICUPS: Va a la vista SAGA intermedia
+                // CRÍTICO: Limpiar TODAS las variables globales al iniciar MultiCups
                 multiCupsData = [];  
                 multiCupsAddType = null; // Reset sub-type
+                availableOffers = [];
+                lastComparisonResult = null;
+                manuallySelectedOffer = null;
                 
                 document.getElementById('landing-view').classList.add('hidden');
                 showMultiCupsSagaView();
